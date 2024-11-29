@@ -50,35 +50,47 @@ public class ArrTest
             arr = new int[]{7,8,9,11,12,14};
             Print.p("first +ve=" + Ex13.first(arr) + ", array=", arr);
         }
-        //if (run % 1000 >= 10)
         if (run % 10 > 0)
         {
             Print.p("\n------ isSemiPalindropm ------");
-            arr = new int[] {4, 10, 10,  3, 4};
-            Print.p("is Pila " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            /**/
+            arr = new int[] {1, 2, 3, 4, 5};
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            arr = new int[] {1, 2, 3, 5, 5};
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            arr = new int[] {1, 2, 3, 4, 4};
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            arr = new int[] {1, 2, 3, 3, 5};
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            arr = new int[] {1, 3, 2, 3, 5};
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            arr = new int[] {4, 10, 10, 3, 4};
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {4, 10, 10, 3, 10, 4};
-            Print.p("is Pila " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {4, 10, 10, 10, 3, 4};
-            Print.p("is Pila " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {4, 10, 10, 10, 10, 3, 10, 4};
-            Print.p("is Pila " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {10, 10, 4, 3, 10};
-            Print.p("is Pila " + Ex13.longestNearlyPal(arr) + ", array=", arr);
-            arr = new int[] {-1, -1};
-            Print.p("is Pila " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {1, 1, 4, 10, 10, 4, 3, 10, 10};
-            Print.p("is Pila " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            /**/
             arr = new int[] {1, 1, 4};
-            Print.p("is Pila " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {4, 2, 2};
-            Print.p("is Pila " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {2, 4, 2};
-            Print.p("is Pila " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            arr = new int[] {-1, -1};
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            arr = new int[] {-1};
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {};
-            Print.p("is Pila " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            Print.p("isSemiPalindropm " + Ex13.longestNearlyPal(arr) + ", array=", arr);
         }
     }
-
     /*
     int fact = factorial(13);
     Print.p("fact = "+fact);

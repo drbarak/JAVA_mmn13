@@ -74,31 +74,8 @@ public class Ex13
     static boolean p = false;
     public static int longestNearlyPal(int[] arr)
     {
-        // sub arrays from pos i to end
         if (p) Print.p(arr);
         return _isSemiPalindrom(arr, true, 0, 0);
-        /*      
-        for (int i = 0; i < arr.length; i++)
-        {
-        int[] arr2 = new int[arr.length - i];
-        // sub-sub arrays from pos 0 to end-k
-        for (int k = 0; k < arr.length - arr2.length + 1; k++)
-        {
-        // arraycopy(source_arr, int sourcePos, dest_arr, int destPos, int len)
-        System.arraycopy(arr, k, arr2, 0, arr2.length);
-        //for (int j = 0; j < arr2.length; j++) arr2[j] = arr[j + k];
-        Print.p(i, k);
-        Print.p(arr2);
-        boolean r = _isSemiPalindrom(arr2, true);
-        if (false && r)
-        {
-        if(p) Print.p(k);
-        return arr2.length;
-        }
-        }
-        }
-        return 0;
-         */
     }
 
     private static int _isSemiPalindrom(int[] arr, boolean internal, int i, int kk)
@@ -109,7 +86,7 @@ public class Ex13
             kk = 0;
         }
         if (i == arr.length) return 0;
-        if (p) Print.p(i, kk);
+        if (p) Print.p("in method 1, i=" + i, kk);
         int[] arr2 = new int[arr.length - i];
         System.arraycopy(arr, kk, arr2, 0, arr2.length);
         if (p) Print.p(arr2);
@@ -122,67 +99,41 @@ public class Ex13
             i = arr.length;
             return arr2.length;
         }
-        if (true) return _isSemiPalindrom(arr, true, i, ++kk);
-        for (int k = 0; k < arr.length - arr2.length + 1; k++)
-        {
-            /*
-             * arraycopy(source_arr, int sourcePos,
-            dest_arr, int destPos, int len)
-             */
-            System.arraycopy(arr, k, arr2, 0, arr2.length);
-            /*
-            for (int j = 0; j < arr2.length; j++)
-            arr2[j] = arr[j + k];
-             */
-            Print.p(i, k);
-            Print.p(arr2);
-            boolean r = _isSemiPalindrom(arr2, true);
-            if (false && r)
-            {
-                if(p) Print.p(k);
-                //return arr2.length;
-            }
-        }
-        return -3;
+        return _isSemiPalindrom(arr, true, i, ++kk);
     }
     private static boolean _isSemiPalindrom(int[] arr, boolean internal)
     {
+        if (p) Print.p("in method 2 ", arr);
         if (arr.length < 2) return true;    // a single number is Palindrom so no need to check
         // loop over all possibles sub-arrays of original array
-        for (int i = 0; i < arr.length / 2; i++)
+        return _isSemiPalindrom(arr, internal, 0);
+    }
+    private static boolean _isSemiPalindrom(int[] arr, boolean internal, int i)
+    {
+        if (p) Print.p("in method 3, i=" + i + " ", arr);
+        if (i == arr.length / 2) return true;
+        // compare 2 digits - one from the left and the other from the right of the array
+        // the position of the digits is shifted by the index i
+        if (arr[i] != arr[arr.length - 1 - i])
         {
-            // compare 2 digits - one from the left and the other from the right of the array
-            // the position of the digits is shifted by the index i
-            if (arr[i] != arr[arr.length - 1 - i])
+            // remove one number, if the array  is internal to the original and check again
+            if (i > 0 && internal)
             {
-                // remove one number, if the array  is internal to the original and check again
-                if (i > 0 && internal)
+                // drop the left number of the pair of digits that are not equal and check again
+                int[] arr2 = new int[arr.length-2*i-1];
+                System.arraycopy(arr, i + 1, arr2, 0, arr2.length);
+                boolean r = _isSemiPalindrom(arr2, false);
+                if (!r) // now drop the right digit of the pair and check again
                 {
-                    // drop the left number of the pair of digits that are not equal and check again
-                    int[] arr2 = new int[arr.length-2*i-1];
-                    System.arraycopy(arr, i + 1, arr2, 0, arr2.length);
-                    /*
-                    for (int j = 0; j < arr2.length; j++)
-                    arr2[j] = arr[i + j + 1];
-                    Print.p(arr2);
-                     */
-                    boolean r = _isSemiPalindrom(arr2, false);
-                    if (!r) // now drop the right digit of the pair and check again
-                    {
-                        System.arraycopy(arr, i, arr2, 0, arr2.length);
-                        /*
-                        for (int j = 0; j < arr2.length; j++)
-                        arr2[j] = arr[i + j];
-                         */
-                        r = _isSemiPalindrom(arr2, false);
-                    }
-                    if (!r) return false;
+                    System.arraycopy(arr, i, arr2, 0, arr2.length);
+                    r = _isSemiPalindrom(arr2, false);
                 }
-                else
-                    return false;
+                if (!r) return false;
             }
+            else
+                return false;
         }
-        return true;
+        return _isSemiPalindrom(arr, internal, ++i);
     }
     private static int minMax = Integer.MAX_VALUE;
     private static int count = 0;

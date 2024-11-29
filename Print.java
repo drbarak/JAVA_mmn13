@@ -35,4 +35,8 @@ public class Print
     {
         p(s + Arrays.toString(arr));
     }
+    public static void p(String s, int n)
+    {
+        p(s + ", " + n);
+    }
 }
