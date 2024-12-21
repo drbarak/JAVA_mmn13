@@ -124,7 +124,7 @@ public class Ex13
         }
         a[countLess] = median;
         return median;
-    }
+    }// calcMedian()
     public static int[] specialArrNoSort(int[] arr, int med)
     {
         count = 0;
