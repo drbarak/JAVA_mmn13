@@ -329,41 +329,135 @@ public class Ex13
             if (p) Print.p("returning U " + point);
         }
     }
-
     private static String makePt(int x, int y)
     {
         return "(" + x + "," + y + ")";
     }
-
-    private static int[] sortArr(int[] arr)
+    /**
+     * A helper method to partially sort an array
+     */
+    private static int calcMedian(int[] org,int[] a)
     {
-        int[] workArr = arr.clone();  // copy the original array so not to change it
-        //Arrays.sort(workArr);
-        // sort an array of integers - using 'selection sort'
-        for (int i = 0; i < arr.length; i++)
+        int median = org[0];
+        int countLess = 0, countMore = 0;
+        for (int i=1; i<org.length; i++)
         {
             count++;
-            int minIndex = i;
-            for (int j = i + 1; j < arr.length; j++)
+            int curr = org[i];
+            int maxCountLess = (i+1)/2;
+            int maxCountMore = ((i+1) % 2 == 1 ? maxCountLess : maxCountLess - 1);
+            if (curr < median)
             {
-                count++;
-                if (workArr[j] < workArr[minIndex])
-                    minIndex = j;
+                if (countLess == maxCountLess) // can't add to Less list
+                {
+                    boolean found = false;
+                    int maxIndex = countLess;
+                    int newPos;
+                    if (p) Print.p(1000, curr, median, maxIndex-1);
+                    // find if in the Less list a number larger than curr then 
+                    // median is added to the Less list and curr become the median
+                    for (int j=countLess;j>0;j--)
+                    {   // if found replace it in the Less list and use it as a median
+                        // and add the median to the More list
+                        count++;
+                        if (a[j-1] > curr)
+                        {
+                            countMore = addToList(org.length, a, median, countMore, true, false);
+                            median = a[j-1];
+                            a[j-1] = curr;
+                            found = true;
+                            break;
+                        }
+                        else if (a[maxIndex-1] < a[j-1])
+                            maxIndex = j-1;
+                    }
+                    if (!found)
+                    {
+                        countMore = addToList(org.length, a, median, countMore, true, false);
+                        median = curr;
+                    }
+                }
+                else
+                    countLess = addToList(org.length, a, curr, countLess, false, false);
             }
-            swap(workArr, i, minIndex);
-            /*
-            int temp = workArr[i];
-            workArr[i] = workArr[minIndex];
-            workArr[minIndex] = temp; 
-            */
+            else
+            {
+                if (countMore == maxCountMore) // can't add to Larger list
+                {
+                    boolean found = false;
+                    int minIndex = org.length - countMore;
+                    // find if in the More list a number less than curr then 
+                    // median is added to the Less list and curr become the median
+                    for (int j=countMore;j>0;j--)
+                    {   // if found, add median it to the Less list and curr becomes the median
+                        count++;
+                        if (a[org.length - j] > curr)
+                        {
+                            countLess = addToList(org.length, a, median, countLess, false, false);
+                            median = curr;
+                            found = true;
+                            break;
+                        }
+                        else if (a[minIndex] > a[org.length - j])
+                            minIndex = org.length - j;
+                    }
+                    if (!found)
+                    {
+                        // not found so replace curr with the minimum position in the
+                        // More list, add median to the Less list and the minimum as median
+                        countLess = addToList(org.length, a, median, countLess, false, false);
+                        if (countMore > 0)
+                        {
+                            median = a[minIndex];
+                            addToList(org.length, a, curr, minIndex, true, true);
+                        }
+                        else
+                            median = curr;
+                    }
+                }
+                else
+                    countMore = addToList(org.length, a, curr, countMore, true, false);
+            }
         }
-        return workArr;
-    }
+        a[countLess] = median;
+        return median;
+    }//calcMedian
+    /**
+     * A helper method to add a number to the lists of smaller/larger numbers
+     * where the smaller numbers are at the begining of the list and the
+     * larger numbers are at the end of the list, controlled by the boolean
+     * 'addToMore' parameter.
+     * This technique, of using the 2 sublists, was developed in order to sort
+     * an array with complexity O(n) instead of O(n*n)
+    */
+    private static int addToList(int len,int[] a, int newNum, int count, boolean addToMore, boolean endOfList)
+    {
+        int newPos = (addToMore && !endOfList ? len - count - 1 : count);
+        if (addToMore)
+        {
+            if (newPos < len - 1 && newNum > a[newPos + 1])
+            {
+                a[newPos] = a[newPos + 1];
+                newPos++;
+            }
+            a[newPos] = newNum;
+        }
+        else
+        {
+            if (newPos > 0 && newNum < a[newPos - 1])
+            {
+                a[newPos] = a[newPos - 1];
+                newPos--;
+            }
+            a[newPos] = newNum;
+        }
+        return ++count;
+    }// addToList()
+    // A helper method to swap 2 numbers in an array of integers
     private static void swap(int[] arr, int i, int j)
     {
         int temp = arr[i];
         arr[i] = arr[j];
         arr[j] = temp; 
-    
-    }
+    }// swap()
 }

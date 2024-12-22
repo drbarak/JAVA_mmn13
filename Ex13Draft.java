@@ -17,8 +17,10 @@ public class Ex13Draft
      */
     static boolean p = false;
     static int count = 0;
+    static int maxIndexLess;
     private static int addToList(int len,int[] a, int newNum, int count, boolean addToMore, boolean endOfList)
     {
+        if (p) Print.p("in addToList: "+addToMore+", " +endOfList);
         int newPos = (addToMore && !endOfList ? len - count - 1 : count);
         if (addToMore)
         {
@@ -33,10 +35,16 @@ public class Ex13Draft
         {
             if (newPos > 0 && newNum < a[newPos - 1])
             {
+                if (p) Print.p("in addToList0: "+a[newPos - 1]+", " +newNum+", " +newPos);
+                if (newPos-1 == maxIndexLess)
+                    maxIndexLess = newPos;
                 a[newPos] = a[newPos - 1];
                 newPos--;
             }
+            else if (newNum > a[maxIndexLess])
+                maxIndexLess = newPos;
             a[newPos] = newNum;
+            if (p) Print.p("in addToList1: "+maxIndexLess+", " +newNum+", " +newPos);
         }
         return ++count;
     }
@@ -45,6 +53,7 @@ public class Ex13Draft
         //p = true;
         int median = org[0];
         int countLess = 0, countMore = 0;
+        maxIndexLess = 0;  // init values
         for (int i=1; i<org.length; i++)
         {
             count++;
@@ -54,6 +63,7 @@ public class Ex13Draft
             if (p) Print.p("i=" + i + ",median="+median+ ",curr="+curr);
             if (p) Print.p("100, countLess="+countLess+",maxCountLess="+maxCountLess+
                 ",countMore="+countMore+",maxCountMore=" + maxCountMore);
+            if (p) Print.p("200, maxIndexLess="+maxIndexLess);
             if (curr < median)
             {
                 if (p) Print.p("500, curr < median");
@@ -65,6 +75,24 @@ public class Ex13Draft
                     if (p) Print.p(1000, curr, median, maxIndex-1);
                     // find if in the Less list a number larger than curr then 
                     // median is added to the Less list and curr become the median
+                    if (a[maxIndexLess] > curr)
+                    {   // if found replace it in the Less list and use it as a median
+                        // and add the median to the More list
+                        addToList(org.length, a, median, countMore, true, false);
+                        countMore++;
+                        found = true;
+                        if (p) Print.p("found");
+                        median = a[maxIndexLess];
+                        a[maxIndexLess] = curr;
+                        maxIndexLess = 0;
+                        for (int k=0;k<countLess;k++)
+                        {
+                            count++;
+                            if (a[k] > a[maxIndexLess])
+                              maxIndexLess = k;
+                        }
+                    }
+                    /*
                     for (int j=countLess;j>0;j--)
                     {   // if found replace it in the Less list and use it as a median
                         // and add the median to the More list
@@ -72,8 +100,33 @@ public class Ex13Draft
                         if (a[j-1] > curr)
                         {
                             countMore = addToList(org.length, a, median, countMore, true, false);
-                            median = a[j-1];
-                            a[j-1] = curr;
+                            if (p) Print.p("j-1=" + (j-1) + ",maxIndexLess="+maxIndexLess+ ", "+ Arrays.toString(a));
+                            if (false && j-1 == maxIndexLess)
+                            {
+                                // problem: could be that a[j-1] is not max
+                                // and if it happens we need to loop to find the max
+                                maxIndexLess = 0;
+                            }
+                            // a[j-1] is going to be the median but if it
+                            // is less than a[maxIndexLess] then a[maxIndexLess]
+                            // should be the median
+                            if (a[j-1] <= a[maxIndexLess])
+                            {
+                                median = a[maxIndexLess];
+                                a[maxIndexLess] = curr;
+                                maxIndexLess = 0;
+                                for (int k=0;k<countLess;k++)
+                                {
+                                    count++;
+                                    if (a[k] > a[maxIndexLess])
+                                      maxIndexLess = k;
+                                }
+                            }
+                            else
+                            {
+                                median = a[j-1];
+                                a[j-1] = curr;
+                            }
                             found = true;
                             if (p) Print.p("found");
                             break;
@@ -81,11 +134,13 @@ public class Ex13Draft
                         else if (a[maxIndex-1] < a[j-1])
                             maxIndex = j-1;
                     }
+                    */
                     if (!found)
                     {
                         if (p) Print.p("not found,"+maxIndex);
                         //a[org.length - countMore - 1] = median;
-                        countMore = addToList(org.length, a, median, countMore, true, false);
+                        addToList(org.length, a, median, countMore, true, false);
+                        countMore++;
                         median = curr;
                     }
                 }
@@ -106,7 +161,8 @@ public class Ex13Draft
                         count++;
                         if (a[org.length - j] > curr)
                         {
-                            countLess = addToList(org.length, a, median, countLess, false, false);
+                            addToList(org.length, a, median, countLess, false, false);
+                            countLess++;
                             median = curr;
                             found = true;
                             if (p) Print.p("found");
@@ -120,7 +176,8 @@ public class Ex13Draft
                         // not found so replace curr with the minimum position in the
                         // More list, add median to the Less list and the minimum as median
                         if (p) Print.p("not found,"+minIndex);
-                        countLess = addToList(org.length, a, median, countLess, false, false);
+                        addToList(org.length, a, median, countLess, false, false);
+                        countLess++;
                         if (countMore > 0)
                         {
                             median = a[minIndex];
@@ -131,11 +188,13 @@ public class Ex13Draft
                     }
                 }
                 else
-                    countMore = addToList(org.length, a, curr, countMore, true, false);
+                    addToList(org.length, a, curr, countMore, true, false);
+                    countMore++;
             }
             if (p) Print.p("i=" + i + ",median="+median+ ", "+ Arrays.toString(a));
             if (p) Print.p("countLess="+countLess+",maxCountLess="+maxCountLess+
                 ",countMore="+countMore+",maxCountMore=" + maxCountMore);
+            if (p) Print.p("maxIndexLess="+maxIndexLess);
             //if (i == 6) break;
         }
         a[countLess] = median;
@@ -155,7 +214,7 @@ public class Ex13Draft
         int[] specialArr = new int[arr.length];
         specialArr[0] = calcMed;
         special(specialArr, a, 1, 1);
-        Print.p("count=" + count);
+        Print.p("count after special()=" + count);
         if (p) Print.p("Result from Special()=", specialArr);
         p = false;
         if (p) Print.p(Arrays.toString(a));
@@ -198,15 +257,15 @@ public class Ex13Draft
                         if (a[last] < a[i])
                             swap(a, i, last--);
                     }
-                    else
+                    else if (a[a.length-1] < a[i])
                         swap(a, i, a.length - 1);
                 }
-                else
+                else  // even numbers should be greater than median
                 {
-                    if (a[i] < a[last])
+                    if (a[i] < a[last] && a[last] > a[0])
                         swap(a, i, last--);
-                    else if (i >= last)
-                        swap(a, i, a.length - 1);
+                    else if (i >= last && a[a.length-1] > a[0])
+                        swap(a, i, a.length-1);
                 }
             }
             if (p) Print.p("i=" + i + "," +Arrays.toString(a));
@@ -226,8 +285,8 @@ public class Ex13Draft
     {
         if (arr.length < 1) return arr;
         count = 0;
-        if (!true)
-            return specialArrNoSort(arr, med);
+        //if (true) return specialArrNoSort(arr, med);
+        specialArrNoSort(arr, med);
         count = 0;
         int[] workArr = sortArr(arr);  // copy and sort the original array so not to change it
         Print.p("Selection sort count=" + count);
@@ -240,7 +299,7 @@ public class Ex13Draft
         int[] specialArr = new int[arr.length];
         specialArr[0] = calcMed;
         special(specialArr, workArr, 1, 1);
-        Print.p("count=" + count);
+        Print.p("Selection sort + special count=" + count);
         return specialArr;
     }
     private static void special(int [] specialArr, int [] workArr, int i, int index)
