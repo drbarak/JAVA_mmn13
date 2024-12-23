@@ -1,19 +1,26 @@
+import java.util.Arrays;
 public class Tester
 {
     // method to test the class
     private static int checkIfSpecial(int []arr){
         int i;
-
+        //Print.p("length:"+arr.length + ", " +Arrays.toString(arr));
         for(i=0;i<arr.length-1;i++)
+        {
+            //Print.p("i=" + i + ",arr[i]="+arr[i]+ ",arr[i+1]"+ arr[i+1]);
             if(i%2==0)//even place
             {
+                //Print.p("even place: "+(arr[i]<arr[i+1])); 
                 if(arr[i]<arr[i+1])//incorrect
                     return i;
             }
             else//odd place
+            {
+                //Print.p("odd place: "+(arr[i]>arr[i+1]));
                 if(arr[i]>arr[i+1])//incorrect
                     return i;
-
+            }
+        }
         return -1;//special array
     }
     
@@ -40,7 +47,7 @@ public class Tester
         if (run[2] == 1)
         {
             Print.p("\n------ specialArr ------");
-            int a[][] = new int[15][];
+            int a[][] = new int[17][];
             a[0] = new int[]{2, -5, -3, 0, 1, 4, 7};
             a[1] = new int[]{2, -5, -3, 1, 4, 7, 0};
             a[2] = new int[]{2, -5, -3, 1, 4, 7, 0, 10,3,-8};
@@ -54,15 +61,19 @@ public class Tester
             a[12] = new int[]{1,2,3,4,5,6,7, 8, 9, 10, 11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
             a[9] = new int[]{4, -5, -3, 1, 2, 7, 0};
             a[10] = new int[]{4, -5, -3, 1, 2, 7, 9, 0};
-            a[13] = new int[1000];
-            for (int i=999; i>=0; i--)
-                a[13][999-i] = i + 1;
-            a[14] = new int[1000];
-            for (int i=999; i>=0; i--)
-                a[14][i] = i + 1;
+            int k = 98;
+            a[13] = new int[k + 1]; for (int i=k; i>=0; i--)  a[13][k-i] = i + 1;
+            k = 99;
+            a[14] = new int[k + 1]; for (int i=k; i>=0; i--) a[14][i] = i + 1;
+            k = 151;
+            a[15] = new int[k + 1]; for (int i=k; i>=0; i--)  a[15][k-i] = i + 1;
+            k = 152;
+            a[16] = new int[k + 1]; for (int i=k; i>=0; i--) a[16][i] = i + 1;
             for (int i=11;i<12;i++)
             {
-                int[] studentResult1= Ex13Draft.specialArr(a[i], 1);
+                //int[] studentResult1= Ex13Draft.specialArr(a[i], 1);
+                int[] studentResult1= Ex13Draft.specialArrNoSort(a[i], 1);
+                
                 Print.p(""+i+", Result=", studentResult1);
                 int result=checkIfSpecial(studentResult1);
                 if(result>=0)
