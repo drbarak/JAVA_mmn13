@@ -189,13 +189,17 @@ public class Ex13Draft
         int medianIndex = a.length / 2;
         int last = a.length - 1;
         swap(a, 0, medianIndex);
-        p = true;
+        //p = true;
         boolean swapWithLast = false;
-        for (int i=1;i<a.length-1;i++)
+        for (int i=2;i<a.length-1;i+=2)
         {
             //p = (i>=85 && i<=95 ? true:false);
             count++;
-            if (p) Print.p("i="+i+", a[i]="+a[i]+","+Arrays.toString(a));
+            if (p) Print.p("i="+i+", a[i]="+a[i]+", medPos="+medianIndex+","+Arrays.toString(a));
+            swap(a, i, (i/2 + medianIndex));
+            //if (i == 8) return a;
+            //if (true) continue;
+        /*
             if (i < medianIndex)
             {
                 if (i % 2 == 1)
@@ -285,11 +289,14 @@ public class Ex13Draft
                     }
                 }
             }
+            */
             if (p) Print.p("i=" + i + "," +Arrays.toString(a));
         }
+        /*
         // take care of end of array, if needed
         if (a.length % 2 == 0 && a[a.length - 1] > a[a.length - 2])
             swap(a, a.length - 1, a.length - 2);
+        */
         Print.p("count after preparing special without extra array=" + count);
         return a;
     }
