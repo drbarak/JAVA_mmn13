@@ -173,132 +173,32 @@ public class Ex13Draft
         p = true;
         if (p) Print.p("Calculated median is "+calcMed + ", "+ Arrays.toString(a));
         Print.p("count calcMed=" + count);
-        /*
-        int savCount = count;
-        int[] specialArr = new int[arr.length];
-        specialArr[0] = calcMed;
-        special(specialArr, a, 1, 1);
-        Print.p("count after special()=" + count);
-        if (p) Print.p("Result from Special()=", specialArr);
-        //if (true) return specialArr;
-        count = savCount;
-        */
         p = false;
         if (p) Print.p(Arrays.toString(a));
-        if (p) Print.p(a[a.length / 2]);        // not allowed to use another array
         int medianIndex = a.length / 2;
-        int last = a.length - 1;
-        swap(a, 0, medianIndex);
+        special(a, 0, medianIndex);
+        Print.p("count after preparing special recursively without extra array=" + count);
+        if (true) return a;
         //p = true;
-        boolean swapWithLast = false;
-        for (int i=2;i<a.length-1;i+=2)
+        for (int i=0;i<a.length-1;i+=2)
         {
-            //p = (i>=85 && i<=95 ? true:false);
             count++;
             if (p) Print.p("i="+i+", a[i]="+a[i]+", medPos="+medianIndex+","+Arrays.toString(a));
             swap(a, i, (i/2 + medianIndex));
-            //if (i == 8) return a;
-            //if (true) continue;
-        /*
-            if (i < medianIndex)
-            {
-                if (i % 2 == 1)
-                {
-                    if (last<a.length - 1 && a[medianIndex] > a[a.length - 1])
-                        swap(a, i, a.length - 1);
-                    else
-                        swap(a, i, medianIndex);
-                }
-                else
-                    swap(a, i, last--);
-            }
-            else
-            {
-                if (p) Print.p("pass medianIndex, odd=" + (i % 2 == 1));
-                if (p) Print.p(a.length-last-1, last-i+1, last, i);
-                if (!swapWithLast && ((a.length-last-1 == last-i+1) || 
-                        (a[a.length-1]>a[0]))) //a[0] is
-                {
-                    swapWithLast = true;
-                    last = a.length - (a[a.length-1]>a[0] ? 2 : 1);
-                }
-                if (swapWithLast && i > last) // find last number that is less than median
-                {
-                    for (int k=a.length-2;k>i; k--)
-                    {
-                        count++;
-                        if (a[k] < a[0])
-                        {
-                            last = k;
-                            break;
-                        }
-                    }
-                }
-                if (p) Print.p(""+swapWithLast);
-                if (i % 2 == 1) // odd numbers should be less than median
-                {
-                    if (swapWithLast && i < last)
-                    {
-                        if (a[last] < a[i])
-                            swap(a, i, last--);
-                    }
-                    else if (a[i] > a[0] && a[a.length-1] < a[i])
-                        swap(a, i, a.length - 1);
-                    else // look for first number that is less than median
-                    {
-                        int endLoop = (i > last ? i : last);
-                        int k;
-                        for (k=a.length-2;k>endLoop; k--)
-                        {
-                            count++;
-                            if (a[k] < a[0])
-                            {
-                                swap(a, i, k);
-                                break;
-                            }
-                        }
-                        if (k == endLoop)
-                            if (p) Print.p("no action");
-                    }
-                }
-                else  // even numbers should be greater than median
-                {
-                    if (p) Print.p(a[i],a[last],a[0],a[a.length-1]);
-                    if (i < last && a[i] < a[last] && a[last] > a[0])
-                        swap(a, i, last--);
-                    else // find first number, from end, larger than median
-                    {
-                        //int maxNum=i;
-                        int endLoop = (i > last ? i : last);
-                        int k;
-                        for (k=a.length-1;k>endLoop; k--)
-                        {
-                            count++;
-                            if (a[k] > a[0])
-                            {
-                                swap(a, i, k);
-                                break;
-                            }
-                            //if (a[k]>a[maxNum]) // look for largest number that is larger than current but less than median
-                                //maxNum = k;
-                        }
-                        if (k == endLoop)// && a[maxNum] == a[i])
-                            if (p) Print.p("no action");
-                        //else
-                            //swap(a, i, maxNum);
-                    }
-                }
-            }
-            */
             if (p) Print.p("i=" + i + "," +Arrays.toString(a));
         }
-        /*
-        // take care of end of array, if needed
-        if (a.length % 2 == 0 && a[a.length - 1] > a[a.length - 2])
-            swap(a, a.length - 1, a.length - 2);
-        */
         Print.p("count after preparing special without extra array=" + count);
         return a;
+    }
+    private static void special(int [] specialArr, int i, int medianIndex)
+    {
+        count++;
+        if (i < specialArr.length)
+        {
+            swap(specialArr, i, (i/2 + medianIndex));
+            i += 2;
+            special(specialArr, i, medianIndex);
+        }
     }
     private static void swap(int[] arr, int i, int j)
     {
@@ -311,37 +211,58 @@ public class Ex13Draft
         if (arr.length < 1) return arr;
         count = 0;
         //if (true) return specialArrNoSort(arr, med);
+        /*
         specialArrNoSort(arr, med);
+        */
         count = 0;
-        int[] workArr = _sortArr(arr);  // copy and sort the original array so not to change it
+        int[] specialArr = sortArr(arr);  // copy and sort the original array so not to change it
         Print.p("Selection sort count=" + count);
         // find the median and compare to input parameters
         int calcMed;
-        calcMed = workArr[arr.length / 2];
-        if (p) Print.p("Special array: median is " + calcMed + ", " + Arrays.toString(workArr));        
+        calcMed = specialArr[arr.length / 2];
+        p = true;
+        if (p) Print.p("Special array: median is " + calcMed + ", " + Arrays.toString(specialArr));        
         if (med != calcMed)
             if (p) Print.p("Provided med = " + med + " is wrong, using calcMed = " + calcMed);
-        int[] specialArr = new int[arr.length];
-        specialArr[0] = calcMed;
-        special(specialArr, workArr, 1, 1);
+        special(specialArr, 0, arr.length / 2);
         Print.p("Selection sort + special count=" + count);
+Print.p("array: " + Arrays.toString(arr));
+        p = false;
+        int[] a = new int[arr.length];
+        int index=0;
+        count = 0;
+        for (int i=0; i<arr.length;i++) // set larger numbers
+        {
+            count++;
+            if (p) Print.p("" + (arr[i] > calcMed) + "," + arr[i]+ ","+calcMed);
+            if (arr[i] >= calcMed)
+            {
+                a[index] = arr[i];
+                index += 2;
+            }
+            if (p) Print.p("i="+i+",array1: " + Arrays.toString(a));
+        }
+        index=1;
+        for (int i=0; i<arr.length;i++) // set smaller numbers at odd positions
+        {
+            count++;
+            if (p) Print.p("" + (arr[i] > calcMed) + "," + arr[i]+ ","+calcMed);
+            if (arr[i] < calcMed)
+            {
+                a[index] = arr[i];
+                index += 2;
+            }
+            if (p) Print.p("i="+i+",array2: " + Arrays.toString(a));
+        }
+        Print.p("O(2n) count=" + count);
+        if (true) return a;
         return specialArr;
-    }
-    private static void special(int [] specialArr, int [] workArr, int i, int index)
-    {
-        count++;
-        if (i == workArr.length) return;
-        if (i % 2 == 1) // index odd have a number smaller than its' neighbours
-            specialArr[i] = workArr[index - 1]; 
-        else
-            specialArr[i] = workArr[workArr.length - index++]; 
-        special(specialArr, workArr, ++i, index);
     }
     private static final int INVALID_NUM = -1;
     private static int nextNum;
     public static int first(int [] arr)
     {
-        int[] workArr = _sortArr(arr);  // copy the original array so not to change it
+        int[] workArr = sortArr(arr);  // copy the original array so not to change it
         if (p) Print.p(workArr);
         nextNum = INVALID_NUM;
         firstNum(workArr, 0);
@@ -499,13 +420,11 @@ public class Ex13Draft
             if (p) Print.p("returning U " + point);
         }
     }
-
     private static String makePt(int x, int y)
     {
         return "(" + x + "," + y + ")";
     }
-
-    private static int[] _sortArr(int[] arr)
+    private static int[] sortArr(int[] arr)
     {
         int[] workArr = arr.clone();  // copy the original array so not to change it
         //Arrays.sort(workArr);
