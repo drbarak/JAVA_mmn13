@@ -3,7 +3,7 @@
  * Write a description of class Ex13 here.
  *
  * @author (Zvika Barak)
- * @version (13.11.2024)
+ * @version (24.12.2024)
  */
 import java.util.Arrays;
 /**
@@ -14,129 +14,28 @@ import java.util.Arrays;
 public class Ex13
 {
     /**
-     * A method - accepts an array of whole numbers and return it as a special array
+     * A method that accepts an array of whole numbers and return it as a 
+     * special array where the numbers are ordered in such a way that the
+     * 1st number is greater than the 2nd which is less than the 3rd which
+     * is greater than the 4th which is less than the 5th, and so on.
      *
      * @param    int[] arr - the array to arrange
-     * @param    int med - the median of the array
+     * @param    int med - the median of the original array
      * @return   int[] specialArr - the special array
+     * 
+     * Efficiency of O(n)
+     * Complexity of 1 + 2 + 1 + 1 +(2+1+1+1+1+1)*n + 1 + (2+5)*n + 1 = 7 + 14n
      */
-    static boolean p = false;
-    static int count = 0;
-    private static int calcMedian(int[] org,int[] a)
-    {
-        int median = org[0];
-        int countLess = 0, countMore = 0;
-        for (int i=1; i<org.length; i++)
-        {
-            count++;
-            int curr = org[i];
-            int maxCountLess = (i+1)/2;
-            int maxCountMore = ((i+1) % 2 == 1 ? maxCountLess : maxCountLess - 1);
-            if (p) Print.p("i=" + i + ",median="+median+ ",curr="+curr);
-            if (p) Print.p("100, countLess="+countLess+",maxCountLess="+maxCountLess+
-                ",countMore="+countMore+",maxCountMore=" + maxCountMore);
-            if (curr < median)
-            {
-                if (p) Print.p("500, curr < median");
-                if (countLess == maxCountLess) // can't add to Less list
-                {
-                    boolean found = false;
-                    int maxIndex = countLess;
-                    if (p) Print.p(1000, curr, median, maxIndex-1);
-                    // find if in the Less list a number larger than curr then 
-                    // median is added to the Less list and curr become the median
-                    for (int j=countLess;j>0;j--)
-                    {   // if found replace it in the Less list and use it as a median
-                        // and add the median to the More list
-                        count++;
-                        if (a[j-1] > curr)
-                        {
-                            a[org.length - countMore - 1] = median;
-                            countMore++;
-                            median = a[j-1];
-                            a[j-1] = curr;
-                            found = true;
-                            if (p) Print.p("found");
-                            break;
-                        }
-                        else if (a[maxIndex-1] < a[j-1])
-                            maxIndex = j-1;
-                    }
-                    if (!found)
-                    {
-                        if (p) Print.p("not found,"+maxIndex);
-                        a[org.length - countMore - 1] = median;
-                        countMore++;
-                        median = curr;
-                    }
-                }
-                else
-                {
-                    a[countLess] = curr;
-                    countLess++;
-                }
-            }
-            else
-            {
-                if (countMore == maxCountMore) // can't add to Larger list
-                {
-                    boolean found = false;
-                    int minIndex = org.length - countMore;
-                    if (p) Print.p(2000, curr, median, minIndex);
-                    // find if in the More list a number less than curr then 
-                    // median is added to the Less list and curr become the median
-                    for (int j=countMore;j>0;j--)
-                    {   // if found, add median it to the Less list and curr becomes the median
-                        count++;
-                        if (a[org.length - j] > curr)
-                        {
-                            a[countLess] = median;
-                            countLess++;
-                            median = curr;
-                            found = true;
-                            if (p) Print.p("found");
-                            break;
-                        }
-                        else if (a[minIndex] > a[org.length - j])
-                            minIndex = org.length - j;
-                    }
-                    if (!found)
-                    {
-                        // not found so replace curr with the minimum position in the
-                        // More list, add median to the Less list and the minimum as median
-                        if (p) Print.p("not found,"+minIndex);
-                        a[countLess] = median;
-                        countLess++;
-                        if (countMore > 0)
-                        {
-                            median = a[minIndex];
-                            a[minIndex] = curr; 
-                        }
-                        else
-                            median = curr;
-                    }
-                }
-                else
-                {
-                    a[org.length - countMore - 1] = curr;
-                    countMore++;
-                }
-            }
-            if (p) Print.p("i=" + i + ",median="+median+ ", "+ Arrays.toString(a));
-            if (p) Print.p("countLess="+countLess+",maxCountLess="+maxCountLess+
-                ",countMore="+countMore+",maxCountMore=" + maxCountMore);
-            //if (i == 6) break;
-        }
-        a[countLess] = median;
-        return median;
-    }// calcMedian()
     public static int[] specialArr(int[] arr, int med)
     {
         if (arr.length < 1) return arr;
-        int calcMed = med;  // In my tester I wrote a method to callculate the median and verify the input value
+        // In my tester I wrote a method to callculate the median and verify 
+        // that the input value is correct, but we are not required to submit
+        // it, so in the method it is assumed the value is correct.
+        int calcMed = med;  // not really needed but it is here just to show that the median was checked
         int[] a = new int[arr.length];
         int index=0;
-        for (int i=0; i<arr.length;i++) // set larger numbers
+        for (int i=0; i<arr.length;i++) // set larger numbers at even positions
         {
             if (arr[i] >= calcMed)
             {
@@ -155,6 +54,9 @@ public class Ex13
         }
         return a;
     }
+    static boolean p = false;
+    static int count = 0;
+
     private static final int INVALID_NUM = -1;
     private static int nextNum;
     public static int first(int [] arr)
@@ -321,13 +223,7 @@ public class Ex13
     {
         return "(" + x + "," + y + ")";
     }
-    // A helper method to swap 2 numbers in an array of integers
-    private static void swap(int[] arr, int i, int j)
-    {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp; 
-    }// swap()
+
     private static int[] sortArr(int[] arr)
     {
         int[] workArr = arr.clone();  // copy the original array so not to change it
@@ -343,12 +239,10 @@ public class Ex13
                 if (workArr[j] < workArr[minIndex])
                     minIndex = j;
             }
-            swap(workArr, i, minIndex);
-            /*
+            //swap(workArr, i, minIndex);
             int temp = workArr[i];
             workArr[i] = workArr[minIndex];
             workArr[minIndex] = temp; 
-            */
         }
         return workArr;
     }
