@@ -4,19 +4,15 @@ public class Tester
     // method to test the class
     private static int checkIfSpecial(int []arr){
         int i;
-        //Print.p("length:"+arr.length + ", " +Arrays.toString(arr));
         for(i=0;i<arr.length-1;i++)
         {
-            //Print.p("i=" + i + ",arr[i]="+arr[i]+ ",arr[i+1]"+ arr[i+1]);
             if(i%2==0)//even place
             {
-                //Print.p("even place: "+(arr[i]<arr[i+1])); 
                 if(arr[i]<arr[i+1])//incorrect
                     return i;
             }
             else//odd place
             {
-                //Print.p("odd place: "+(arr[i]>arr[i+1]));
                 if(arr[i]>arr[i+1])//incorrect
                     return i;
             }
@@ -26,7 +22,7 @@ public class Tester
     
     public static void main()
     {
-        int[] run = {0,0,1,0};
+        int[] run = {0,0,0,0};
         int[][] m;
         int[] arr;
         boolean p = true;
@@ -67,7 +63,7 @@ public class Tester
                 a[13+j] = new int[k + 1]; for (int i=k; i>=0; i--)  a[13+j][k-i] = i + 1;
                 a[13+j+1] = new int[k + 1 +1]; for (int i=k; i>=0; i--)  a[13+j+1][k-i] = i + 1;
             }
-            for (int i=0;i<13+last;i++)
+            for (int i=13+last-1;i<13+last;i++)
             {
                 int med = 0;
                 if (a[i].length > 0)
@@ -78,7 +74,7 @@ public class Tester
                     Print.p("med=" + med +", array: " + Arrays.toString(workArr));                
                 }
                 int[] studentResult1= Ex13.specialArr(a[i], med);
-//                int[] studentResult1= Ex13Draft.specialArr(a[i], 1);
+                //int[] studentResult1= Ex13Draft.specialArr(a[i], med);
                 //int[] studentResult1= Ex13Draft.specialArrNoSort(a[i], 1);
                 Print.p(""+i+", med=" + med + ", Result=", studentResult1);
                 int result=checkIfSpecial(studentResult1);
@@ -92,20 +88,27 @@ public class Tester
         if (run[1] == 1)
         {
             Print.p("\n------ first ------");
+            arr = new int[]{-2,-3,0,1,20};
             arr = new int[]{4, -5, -3, 2, 1, 7, 0};
-            Print.p("first +ve=" + Ex13Draft.first(arr) + ", array=", arr);
+            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 3);
+            arr = new int[]{4, -5, -3, 2, 1, 7, 0, 4, 4, 4};
+            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 3);
             arr = new int[]{1, -3, 6, 2, 0, 15};
-            Print.p("first +ve=" + Ex13Draft.first(arr) + ", array=", arr);
+            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 3);
             arr = new int[]{1, 1, 1, 1};
-            Print.p("first +ve=" + Ex13Draft.first(arr) + ", array=", arr);
+            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 2);
             arr = new int[]{0};
-            Print.p("first +ve=" + Ex13Draft.first(arr) + ", array=", arr);
+            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 1);
             arr = new int[]{1, 2, 3, 4};
-            Print.p("first +ve=" + Ex13Draft.first(arr) + ", array=", arr);
-            arr = new int[]{5, -1, 3, 1, 0, -2, 2};
-            Print.p("first +ve=" + Ex13Draft.first(arr) + ", array=", arr);
+            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 5);
             arr = new int[]{7,8,9,11,12,14};
-            Print.p("first +ve=" + Ex13Draft.first(arr) + ", array=", arr);
+            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 1);
+            arr = new int[]{7, 6, 5, 4, 3, 2, 1};
+            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 8);
+            arr = new int[]{5, -1, 3, 1, 0, -2, 2};
+            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 4);
+            arr = new int[]{1, 2, 4, 4};
+            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 3);
         }
         if (run[0] == 1)
         {
