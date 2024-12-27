@@ -22,9 +22,10 @@ public class Tester
     
     public static void main()
     {
-        int[] run = {0,0,0,0};
+        int[] run = {0,1,0,0};
         int[][] m;
         int[] arr;
+        int a[][] = new int[117][];
         boolean p = true;
         if (run[3] == 1)
         {
@@ -43,7 +44,6 @@ public class Tester
         if (run[2] == 1)
         {
             Print.p("\n------ specialArr ------");
-            int a[][] = new int[117][];
             a[0] = new int[]{2, -5, -3, 0, 1, 4, 7};
             a[1] = new int[]{2, -5, -3, 1, 4, 7, 0};
             a[2] = new int[]{2, -5, -3, 1, 4, 7, 0, 10,3,-8};
@@ -71,7 +71,7 @@ public class Tester
                     int[] workArr = a[i].clone();  // copy the original array so not to change it
                     Arrays.sort(workArr);
                     med = workArr[workArr.length/2];
-                    Print.p("med=" + med +", array: " + Arrays.toString(workArr));                
+                    Print.p("med=" + med +", array: ", workArr);
                 }
                 int[] studentResult1= Ex13.specialArr(a[i], med);
                 //int[] studentResult1= Ex13Draft.specialArr(a[i], med);
@@ -88,27 +88,35 @@ public class Tester
         if (run[1] == 1)
         {
             Print.p("\n------ first ------");
-            arr = new int[]{-2,-3,0,1,20};
-            arr = new int[]{4, -5, -3, 2, 1, 7, 0};
-            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 3);
-            arr = new int[]{4, -5, -3, 2, 1, 7, 0, 4, 4, 4};
-            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 3);
-            arr = new int[]{1, -3, 6, 2, 0, 15};
-            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 3);
-            arr = new int[]{1, 1, 1, 1};
-            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 2);
-            arr = new int[]{0};
-            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 1);
-            arr = new int[]{1, 2, 3, 4};
-            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 5);
-            arr = new int[]{7,8,9,11,12,14};
-            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 1);
-            arr = new int[]{7, 6, 5, 4, 3, 2, 1};
-            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 8);
-            arr = new int[]{5, -1, 3, 1, 0, -2, 2};
-            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 4);
-            arr = new int[]{1, 2, 4, 4};
-            Print.p("first +ve=" + Ex13Draft.firstLoop(arr) + ", test="+ 3);
+            int[] test = new int[20];
+            a[0] = new int[]{-2,-3,0,1,20};
+            test[0] = 2;
+            a[1] = new int[]{4, -5, -3, 2, 1, 7, 0};
+            test[1] = 3;
+            a[2] = new int[]{4, -5, -3, 2, 1, 7, 0, 4, 4, 4};
+            test[2] = 3;
+            a[3] = new int[]{1, -3, 6, 2, 0, 15};
+            test[3] = 3;
+            a[4] = new int[]{1, 1, 1, 1};
+            test[4] = 2;
+            a[5] = new int[]{0};
+            test[5] = 1;
+            a[6] = new int[]{1, 2, 3, 4};
+            test[6] = 5;
+            a[7] = new int[]{7,8,9,11,12,14};
+            test[7] = 1;
+            a[8] = new int[]{7, 6, 5, 4, 3, 2, 1};
+            test[8] = 8;
+            a[9] = new int[]{5, -1, 3, 1, 0, -2, 2};
+            test[9] = 4;
+            a[10] = new int[]{1, 2, 4, 4};
+            test[10] = 3;
+            for (int i=0;i<11;i++)
+            {
+                int[] savA = a[i].clone();
+                int result = Ex13.first(a[i]);
+                Print.p("first +ve=" + result + ", test="+ (result == test[i])+", ", savA);
+            }
         }
         if (run[0] == 1)
         {

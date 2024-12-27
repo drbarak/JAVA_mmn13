@@ -1,16 +1,9 @@
-
 /**
- * Write a description of class Ex13 here.
+ * A class to store methods solving exercise 13
  *
  * @author (Zvika Barak)
- * @version (24.12.2024)
+ * @version (27.12.2024)
  */
-import java.util.Arrays;
-/**
- * to remove above import
- */
-
-
 public class Ex13
 {
     /**
@@ -24,7 +17,7 @@ public class Ex13
      * @return   int[] specialArr - the special array
      * 
      * Efficiency of O(n)
-     * Complexity of 1 + 2 + 1 + 1 +(2+1+1+1+1+1)*n + 1 + (2+5)*n + 1 = 7 + 14n
+     * Complexity of 2+n+2+(2+1+1)*2 = 12+n -> O(n)
      */
     public static int[] specialArr(int[] arr, int med)
     {
@@ -54,38 +47,85 @@ public class Ex13
         }
         return a;
     }
+    /**
+     * A method to find the first positive integer (>0) not included in the
+     * array of unsorted integers (may have -ve numbers)
+     * 
+     * Example: the first number of the array {1,-3,6,2,0,15} is 3
+     * 
+     * @param    int[] arr - the array to find
+     * @return   int number - the first -ve integer not included in the array
+     * 
+     * Efficiency of O(4n) -> O(n)
+     * Complexity of 2+2+4*(2+1+1)+2+1+2+2=27 -> O(1)
+     */
+    public static int first(int[] arr)
+    {
+        int len = arr.length;
+        // Here we remove all -ve and 0 numbers and numbers larger than len
+        // because the numbers that matter are from 1 to len only
+        int temp = 0;
+        for (int i=0; i<arr.length;i++)
+        {
+            if (arr[i] <= 0 || arr[i] > len)
+            {
+                while (len > 0 && (arr[len-1] <= 0 || arr[len-1] > len))
+                    len--;
+                if (len == 0) return 1;   // none left
+                if (i >= len)
+                    i = arr.length;
+                else if (arr[len-1] > 0 && len > 1 && arr[len-1] <= len)
+                {
+                    swap(arr, i, len-1, temp);
+                    len--;
+                }
+            }
+        }
+            // check if there are duplicates so we need to ignore them
+        int savLen = len;
+        int index;
+        savLen = len;
+        for (int i=0; i<savLen; i++)
+        {
+            index = Math.abs(arr[i]) - 1;
+            if (index < len && arr[index] > 0) // not a duplicate and not larger than len
+                arr[index] = -arr[index];
+            else
+            {
+                len--;
+                arr[i] = savLen + 1;
+            }
+        }
+        if (len < savLen)   // found duplicates or larger numbers
+        {
+            for (int i=0; i<savLen; i++)    // remove numbers larger than new length after removing duplicates
+            {
+                arr[i] = Math.abs(arr[i]);
+                if (arr[i] > len && arr[i] < savLen + 1)
+                    len--;
+            }
+        }
+        int sum = 0;
+        for (int i=0; i<savLen; i++)
+        {
+            temp = Math.abs(arr[i]);
+            if (temp <= len)
+                sum += temp;
+        }
+        int sumOfSerie = (1 + len) * len / 2;
+        if (sum == sumOfSerie)
+            return len + 1;
+        return sumOfSerie - sum;   // sum must be -ve becuase there are numbers larger than len
+    } // first()
+    // helper method to swap 2 numbers in an array of integers
+    private static void swap(int[] arr, int i, int j, int temp)
+    {
+        temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp; 
+    }
     static boolean p = false;
     static int count = 0;
-
-    private static final int INVALID_NUM = -1;
-    private static int nextNum;
-    public static int first(int [] arr)
-    {
-        int[] workArr = sortArr(arr);  // copy the original array so not to change it
-        if (p) Print.p(workArr);
-        nextNum = INVALID_NUM;
-        firstNum(workArr, 0);
-        return (nextNum == INVALID_NUM ? 1 : nextNum + 1);
-    }
-    private static boolean firstNum(int [] workArr, int i)
-    {
-        if (i == workArr.length) return true;
-        int num = workArr[i];
-        if (p) Print.p(num, i, nextNum);
-        if (num < 1) return firstNum(workArr, ++i);  // skip 0 and -ve numbers
-        if (nextNum < num)
-        {
-            if (nextNum == INVALID_NUM)
-            {
-                if (num > 1)
-                    return firstNum(workArr, workArr.length);
-            }
-            else if (num - nextNum > 1)
-                return firstNum(workArr, workArr.length);
-            nextNum = num;
-        }
-        return firstNum(workArr, ++i);
-    }
     public static int longestNearlyPal(int[] arr)
     {
         return isSemiPalindrome(arr, true, 0, 0);
@@ -227,8 +267,6 @@ public class Ex13
     private static int[] sortArr(int[] arr)
     {
         int[] workArr = arr.clone();  // copy the original array so not to change it
-        //Arrays.sort(workArr);
-        // sort an array of integers - using 'selection sort'
         for (int i = 0; i < arr.length; i++)
         {
             count++;

@@ -23,26 +23,45 @@ public class Ex13Draft
         p = false;
         for (int i=0; i<arr.length;i++) // remove all -ve and 0 numbers
         {
-            if (arr[i] <= 0)
+            if (arr[i] <= 0 || arr[i] > len)
             {
                 if (p) Print.p("i="+i+", len="+len+", ", arr);
-                while (len > 0 && arr[len-1] <= 0)
+                while (len > 0 && (arr[len-1] <= 0 || arr[len-1] > len))
                     len--;
                 if (len == 0) return 1;   // no +ve numbers
                 if (p) Print.p(" len="+len+", ", arr);
                 if (i >= len)
                     i = arr.length;
-                else if (arr[len-1] > 0 && len > 1)
+                else if (arr[len-1] > 0 && len > 1 && arr[len-1] <= len)
                 {
                     MyLibrary.swap(arr, i, len-1);
                     len--;
                 }
                 if (p) Print.p(" len="+len+", ", arr);
             }
+            /*
+            if (false && i < len && arr[i] > len)
+            {
+                if (p) Print.p(">i="+i+", len="+len+", ", arr);
+                while (len > 0 && arr[len-1] > len)
+                    len--;
+                if (len == 0) return 1;   // no number less then len
+                if (p) Print.p(" len="+len+", ", arr);
+                if (i >= len)
+                    i = arr.length;
+                else if (arr[len-1] < len && len > 1)
+                {
+                    MyLibrary.swap(arr, i, len-1);
+                    len--;
+                }
+                if (p) Print.p(" len="+len+", ", arr);
+            }
+            */
         }
         if (p) Print.p("1000, len="+len+", ", arr);
         int savLen = len;
         //p = true;
+        /*
         for (int i=0; i<savLen; i++)    // remove all numbers larger than len
         {
             if (arr[i] > len)
@@ -62,8 +81,10 @@ public class Ex13Draft
                 if (p) Print.p(" len="+len+", ", arr);
             }
         }
+        */
         //p = true;
         if (p) Print.p("2000, len="+len+", ", arr);
+        p = false;
         /*
         int sum = (1 + len) * len / 2;  // sum of arthimetic serie
         //p = true;
@@ -78,12 +99,12 @@ public class Ex13Draft
         int sum;
         int index;
         savLen = len;
-        //p = false;
+        p = false;
         for (int i=0; i<savLen; i++)
         {
             index = Math.abs(arr[i]) - 1;
-            if (p) Print.p(""+i+", "+index+", ", arr);
-            if (arr[index] > 0) // not a duplicate
+            if (p) Print.p(""+i+", "+index+", "+len, arr);
+            if (index < len && arr[index] > 0) // not a duplicate and not larger than len
             {
                 if (p) Print.p(i, index, arr[index], len);
                 arr[index] = -arr[index];
@@ -94,19 +115,26 @@ public class Ex13Draft
                 arr[i] = savLen + 1;
             }
         }
+        //p = true;
         if (p) Print.p(len, savLen);
-        for (int i=0; i<savLen; i++)    // remove numbers larger than new length after removing duplicates
+        if (len < savLen)   // found duplicates or larger numbers
         {
-            arr[i] = Math.abs(arr[i]);
-            if (arr[i] > len && arr[i] < savLen + 1)
-                len--;
+            for (int i=0; i<savLen; i++)    // remove numbers larger than new length after removing duplicates
+            {
+                arr[i] = Math.abs(arr[i]);
+                if (arr[i] > len && arr[i] < savLen + 1)
+                    len--;
+            }
         }
         if (p) Print.p("4000, len="+len+", ", arr);
+        p = false;
         sum = 0;
+        int temp;
         for (int i=0; i<savLen; i++)
         {
-            if (arr[i] <= len)
-                sum += arr[i];
+            temp = Math.abs(arr[i]);
+            if (temp <= len)
+                sum += temp;
         }
         if (p) Print.p("5000, len="+len+", sum="+sum+", ", arr);
         int sumOfSerie = (1 + len) * len / 2;
