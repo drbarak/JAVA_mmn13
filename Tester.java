@@ -163,7 +163,8 @@ public class Tester
             arr = new int[] {-1};
             arr = new int[] {};
             */
-            //arr = new int[] {1,3,2,5,2,1};
+            arr = new int[] {1,3,2,5,2,1};
+            arr = new int[] {1,2,5,2,3,1};
             //Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
             Print.p("isSemiPalindrome " + Ex13.longestNearlyPal(arr) + ", array=", arr);
         }

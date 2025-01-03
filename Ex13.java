@@ -215,42 +215,44 @@ public class Ex13
          */
         return isSemiPalindrome(arr, true, numsToRemove, index + 1);
     }
+    
     /**
      * A helper method to check if the sub-array is semi-palindrom.
      * 
      * @param   int[] arr - the array to work on
-     * @param   boolean internal - tells whether the pair we are checking to see if they are
-     *                      equal, is internal to the array, or at the edge, because we are not
+     * @param   boolean internal - tells whether the pair we are checking to see for
+     *                      equality, is internal to the array, or at the edge, because we are not
      *                      allowed to drop a number at the edge of the sub-array to see
      *                      if the reduced sub-array is a semi-palindrom
-     * @param   int numsToRemove - the number of numbers to drop from the array to create the sub-arrays
-     * @param   int index - the starting position within the array to create the sub-array
+     * @param   int index - the position within the array to take the left number and also
+     *                     the position from the end of the array to take the right number to
+     *                     form a pair that must be equal for the sub-array to be palindrom
      * 
      * @return  true if it is semi-palindrom, else it returns false
      */
-    private static boolean isSemiPalindrome(int[] arr, boolean internal, int i)
+    private static boolean isSemiPalindrome(int[] arr, boolean internal, int index)
     {
-        if (i == arr.length / 2) return true;   // finished checking all the pairs of this array
+        if (index == arr.length / 2) return true;   // finished checking all the pairs of this array
         // compare 2 digits - one from the left and the other from the right of the array,
         // the position of the digits is shifted by the index i
-        if (arr[i] != arr[arr.length - 1 - i])
+        if (arr[index] != arr[arr.length - 1 - index])
         {
             // remove one number, if the array is internal to the original and check again
-            if (i > 0 && internal)
+            if (index > 0 && internal)
             {
                 // This code checks for SemiPalindrome - if it is removed then only true 
                 // Palindrome are looked for.
                 // It drops the left number of the pair of numbers that are not equal and
                 // checks again, then the right number of the pair and checks again
-                int len2 = arr.length-2*i-1;
+                int len2 = arr.length-2*index-1;
                 if (len2 > 1)
                 {
                     int[] arr2 = new int[len2];
-                    arrayCopy(arr, i + 1, arr2, 0, len2);
+                    arrayCopy(arr, index + 1, arr2, 0, len2);
                     boolean r = isSemiPalindrome(arr2, false, 0);
                     if (!r) // now drop the right digit of the pair and check again
                     {
-                        arrayCopy(arr, i, arr2, 0, len2);
+                        arrayCopy(arr, index, arr2, 0, len2);
                         r = isSemiPalindrome(arr2, false, 0);
                     }
                     if (!r) return false;
@@ -259,7 +261,7 @@ public class Ex13
             else
                 return false;
         }
-        return isSemiPalindrome(arr, internal, i+1); // this sub-array is not semi-palindrom
+        return isSemiPalindrome(arr, internal, index+1); // this sub-array is not semi-palindrom
                                     // so go back and check more internal pair of digits
     }
     /**

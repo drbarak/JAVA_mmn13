@@ -654,10 +654,12 @@ Print.p("array: ", arr);
                 {
                     int[] arr2 = new int[len2];
                     arrayCopy(arr, i + 1, arr2, 0, len2);
+                    if (p) Print.p("in method 3A, i=" + i + " ", arr2);
                     boolean r = isSemiPalindrome(arr2, false, 0);
                     if (!r) // now drop the right digit of the pair and check again
                     {
                         arrayCopy(arr, i, arr2, 0, len2);
+                        if (p) Print.p("in method 3B, i=" + i + " ", arr2);
                         r = isSemiPalindrome(arr2, false, 0);
                     }
                     if (!r) return false;
