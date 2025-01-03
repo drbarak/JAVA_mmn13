@@ -22,7 +22,7 @@ public class Tester
     
     public static void main()
     {
-        int[] run = {0,1,0,0};
+        int[] run = {1,0,0,0};
         int[][] m;
         int[] arr;
         int a[][] = new int[117][];
@@ -30,16 +30,29 @@ public class Tester
         if (run[3] == 1)
         {
             m = new int[][]{{1, 3}, {4, 2}};
-            m = new int[][]{{1, 2}, {3, 4}};
+            m = new int[][]{{1, 8}, {3, 4}};
+            m = new int[][]{{1, 20, 5}, {6, 3, 4}, {6, 13, 4}};
+            m = new int[][]{{1, 20, 5}, {6, 3, 4}, {0, 13, 4}};
+            /*
             m = new int[][]{{4,5,8,2}, {3,12,7,16}, {13,1,10,14}, {15,11,9,6}};
             m = new int[][]{{4,5,8,2}, {3,12,16, 7}, {13,1,10,14}, {15,11,9,6}};
             m = new int[][]{{4,1,9,3,25}, {24,23,22,21,5}, {13,12,15,16,14}, {17,11,18,19,20}, {10,2,8,7,6}};
-            m = new int[][]{{4,1,9,3,25}, {24,23,2,21,5}, {13,12,15,16,22}, {17,11,18,19,20}, {10,14,8,7,6}};
-            m = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8, -9}};
+            */
+            //m = new int[][]{{4,1,9,3,25}, {24,23,2,21,5}, {13,12,15,16,22}, {17,11,18,19,20}, {10,14,8,7,6}};
+            //m = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8, -9}};
+            //m = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8, 0}};
+            //m = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8}};
+            //m = new int[][]{{1, 20, 5}, {6, 3, 4}, {-6, 13, 4}};
+            /*
+            m = new int[][]{};
+            m = new int[][]{{1},{2}};
+            m = new int[][]{{1, 3},{2}};
+            */
             Print.p("------ extreme ------");
-            for (int row = 0; row < m.length; row++)
-                Print.p("row " + row, m[row]);
+            Print.p(m);
+            //Print.p("extreme minMax = " + Ex13.extreme(m));
             Print.p("extreme minMax = " + Ex13Draft.extreme(m));
+            Print.p(m);
         }
         if (run[2] == 1)
         {
@@ -57,13 +70,14 @@ public class Tester
             a[10] = new int[]{4, -5, -3, 1, 2, 7, 9, 0};
             a[11] = new int[]{25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7, 6, 5, 4, 3, 2, 1};
             a[12] = new int[]{1,2,3,4,5,6,7, 8, 9, 10, 11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
-            int last = 2;
+            //a[13] = new int[]{4, -5, 1, 1, 2, 7, 1, 0}; // duplicates - crashed. not allowed
+            int last = 2, end = 13;
             for (int j=0,k=98;j<last;j+=2,k+=10000)
             {
-                a[13+j] = new int[k + 1]; for (int i=k; i>=0; i--)  a[13+j][k-i] = i + 1;
-                a[13+j+1] = new int[k + 1 +1]; for (int i=k; i>=0; i--)  a[13+j+1][k-i] = i + 1;
+                a[end+j] = new int[k + 1]; for (int i=k; i>=0; i--)  a[end+j][k-i] = i + 1;
+                a[end+j+1] = new int[k + 1 +1]; for (int i=k; i>=0; i--)  a[end+j+1][k-i] = i + 1;
             }
-            for (int i=13+last-1;i<13+last;i++)
+            for (int i=13;i<14;i++)
             {
                 int med = 0;
                 if (a[i].length > 0)
@@ -73,8 +87,8 @@ public class Tester
                     med = workArr[workArr.length/2];
                     Print.p("med=" + med +", array: ", workArr);
                 }
-                int[] studentResult1= Ex13.specialArr(a[i], med);
-                //int[] studentResult1= Ex13Draft.specialArr(a[i], med);
+                //int[] studentResult1= Ex13.specialArr(a[i], med);
+                int[] studentResult1= Ex13Draft.specialArr(a[i], med);
                 //int[] studentResult1= Ex13Draft.specialArrNoSort(a[i], 1);
                 Print.p(""+i+", med=" + med + ", Result=", studentResult1);
                 int result=checkIfSpecial(studentResult1);
@@ -111,10 +125,14 @@ public class Tester
             test[9] = 4;
             a[10] = new int[]{1, 2, 4, 4};
             test[10] = 3;
-            for (int i=0;i<11;i++)
+            a[11] = new int[]{};
+            test[11] = 1;
+            
+            for (int i=0;i<12;i++)
             {
                 int[] savA = a[i].clone();
                 int result = Ex13.first(a[i]);
+                //int result = Ex13Draft.firstLoop(a[i]);
                 Print.p("first +ve=" + result + ", test="+ (result == test[i])+", ", savA);
             }
         }
@@ -122,43 +140,32 @@ public class Tester
         {
             Print.p("\n------ isSemiPalindrome ------");
             arr = new int[] {1, 2, 3, 4, 5};
-            /**/
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
-            arr = new int[] {1, 2, 3, 5, 5};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
+            //arr = new int[] {1, 2, 3, 4, 5, 6};
+            //arr = new int[] {1, 2, 3, 5, 5};
             arr = new int[] {1, 2, 3, 4, 4};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
+            /*
             arr = new int[] {1, 2, 3, 3, 5};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {1, 3, 2, 3, 5};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {4, 10, 10, 3, 4};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
-            arr = new int[] {4, 10, 10, 3, 10, 4};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
+            */
+            //arr = new int[] {4, 10, 10, 3, 10, 4};
+            /*
             arr = new int[] {4, 10, 10, 10, 3, 4};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {4, 10, 10, 10, 10, 3, 10, 4};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {10, 10, 4, 3, 10};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
-            /**/
             arr = new int[] {1, 1, 4, 10, 10, 4, 3, 10, 10};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
-            /**/
+            */
             arr = new int[] {1, 1, 4};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
+            /*
             arr = new int[] {4, 2, 2};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {2, 4, 2};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {-1, -1};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {-1};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
             arr = new int[] {};
-            Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
-            /**/
+            */
+            //arr = new int[] {1,3,2,5,2,1};
+            //Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
+            Print.p("isSemiPalindrome " + Ex13.longestNearlyPal(arr) + ", array=", arr);
         }
     }
 }

@@ -1,35 +1,313 @@
-
-/**
- * Write a description of class Ex13 here.
- *
- * @author (Zvika Barak)
- * @version (13.11.2024)
- */
 public class Ex13Draft
 {
     static boolean p = false;
     static int count = 0;
 
     /**
+     * WAITING FOR AN ANSWER REGARDING ABILITY TO USE A TEMP ARRAY TO STORE
+     * GLOBAL VAR
+     * Answer - no temp array
+     */
+    /**
+     * A method that accepts a 2-dimensional array (named mat[][]) of whole
+     * +ve numbers and goes over all possible paths in this array, starting
+     * from cell (0,0) to cell (mat.length-1, mat.length-1), such that one
+     * can move from cell (i,j) to any of it's four neigbours by moving up,
+     * down, left and right, but not diagonally.
+     * The method finds the largest number for each path, and returns the 
+     * smallest value of these numbers (all numbers in mat[][] are > 0).
+     * 
+     */
+    public static int extreme(int[][] mat)
+    {
+        //int[] minMax = new int []{Integer.MAX_VALUE};  // to store the min sim 
+        if (mat.length < 2) return Integer.MIN_VALUE; // must be at least size 2x2
+        for (int i=0; i<mat.length;i++)
+            if (mat[i].length != mat.length) 
+                return Integer.MIN_VALUE;   // invalid: return min to know ehat the problem
+        boolean neg = false;
+        int max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        for (int i=0; i<mat.length;i++)
+        {
+            for (int j=0; j<mat.length;j++)
+            {
+                if (mat[i][j] <= 0) neg = true;
+                if (mat[i][j] > max) max = mat[i][j];
+                if (mat[i][j] < min) min = mat[i][j];
+            }
+        }
+        int shift = 0;
+        count = 0;
+        if (neg)    // found -ve member so min < 0
+        {
+            if (max - min < Integer.MAX_VALUE)
+            {
+                shift = 1 - min;    // shift mAT so all +ve
+                for (int i=0; i<mat.length;i++)
+                    for (int j=0; j<mat.length;j++)
+                        mat[i][j] += shift;
+            }
+            else
+                return Integer.MAX_VALUE;   // invalid: return max to know ehat the problem
+        }
+        /*
+        int mat00 = mat[0][0];  // we are not allowe to create an extra array or global variable
+        //mat[0][0] = Integer.MAX_VALUE;
+        String[] minPath = new String[]{""};
+        findPaths(0, 0, "", -1, mat, mat00, minPath);
+        Print.p(minPath[0]);
+        if (true) return -1;
+        //p = true;
+        int min = findPaths(0, 0, -1, Integer.MAX_VALUE, mat, mat00);
+        Print.p(mat);
+        int result = mat[0][0]; // save return value
+        mat[0][0] = mat00; // restore original value
+        //Print.p(minPath[0],max); 
+        */
+        //int min;
+        //p = true;
+        min = findPaths(0, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, mat);
+        if (shift > 0)  // restore mat and min
+        {
+            min -= shift;
+            for (int i=0; i<mat.length;i++)
+                for (int j=0; j<mat.length;j++)
+                    mat[i][j] -= shift;
+        }
+        if (p) Print.p("count = " + count);
+        return min;
+        //return result;
+        //Print.p(minPath[0],minMax[0]); 
+        //return minMax[0];
+    }
+    // assume only +ve number in mat[][] so can marked visited cell by making
+    // the number -ve, thus we do not need the "path" string
+    // but we lose the ability to save the minPath to see it
+    // Also, the method below will not find the min between the max of the paths
+    // because it can not keep the global value of that min - it can find
+    // the max for a given path, but does not have with what to compare
+    private static int findPaths(int x, int y, int max, int min, int[][] m)
+    {
+        // check boundries
+        count++;
+        String point = makePt(x, y);
+        if (p) Print.p(point, count);
+        //restore the boundries check before calling the method to prevent 
+        //  unneeded calls to the method
+        //if (x < 0 || x >= m.length || y < 0 || y >= m.length) return;
+        //int mxy = (x == 0 && y == 0 ? mat00 : m[x][y]);
+        int mxy = m[x][y];
+        if (min < mxy) return min; // no use to check this path because a number greater than the min was already found
+        //if (p) Print.p("max=" + max + ",value=" + mxy);
+        if (p) Print.p(m);
+        if (p) Print.p(",value=" + mxy);
+        if (mxy < 0) return min; // check if we visited this point already
+        if (max < mxy) max = mxy;
+        if (x == m.length-1 && y == m.length-1)
+        {
+            if (p) Print.p(100, max, min);
+            if (min > max) min = max;
+            if (p) Print.p(200, max, min);
+            //m[x][y] = -m[x][y]; // marked as visited already
+            //if (m[0][0] > max)                m[0][0] = max;
+            //if (p) Print.p("Path = [" + path + "] max=" + max + ", minMax=" + m[0][0] + ", count=" + ++count);
+            return min;
+        }
+        //if (x == 0 && y == 0)            mat00 = -mat00;
+        //else
+        m[x][y] = -mxy; // marked as visited already
+        //int max = mxy;
+        int num;
+        if (x > 0 && m[x-1][y]>0)// && path.indexOf(makePt(x - 1, y)) < 0) // prevents left after right because it returns to prev point
+        {
+            if (p) Print.p("calling U " + point);
+            num = findPaths(x-1, y, max, min, m);    // up
+            if (min > num) min = num;
+            if (p) Print.p("returning U " + point);
+        }
+        if (x < m.length-1 && m[x+1][y]>0)// && path.indexOf(makePt(x + 1, y)) < 0) 
+        {
+            if (p) Print.p("calling D " + point);
+            num = findPaths(x+1, y, max, min, m);     // down
+            if (min > num) min = num;
+            if (p) Print.p("returning D " + point);
+        }
+        if (y > 0 && m[x][y-1]>0)// && path.indexOf(makePt(x, y - 1)) < 0)
+        {
+            if (p) Print.p("calling L " + point);
+            num = findPaths(x, y-1, max, min, m);    // left
+            if (min > num) min = num;
+            if (p) Print.p("returning L " + point);
+        }
+        if (y < m.length-1 && m[x][y+1]>0)// && path.indexOf(makePt(x, y + 1)) < 0) 
+        {
+            if (p) Print.p("calling R " + point);
+            num = findPaths(x, y+1, max, min, m);     // right
+            if (min > num) min = num;
+            if (p) Print.p("returning R " + point);
+        }
+        if (m[x][y] < 0) m[x][y] = -m[x][y]; // restore value
+        if (p) Print.p(1000, max, mxy, m[x][y]);
+        return min;
+    }
+    private static void findPaths(int x, int y, String path, int max, 
+                        int[][] m, int mat00, String[] minPath)
+    {
+        String point = makePt(x, y);
+        path += point;
+        int mxy = (x == 0 && y == 0 ? mat00 : m[x][y]);
+        if (p) Print.p(path + ",max=" + max + ",value=" + mxy);
+        if (max < mxy) max = mxy;
+        if (x == m.length - 1 && y == m.length - 1)
+        {
+            if (m[0][0] > max)
+            {
+                m[0][0] = max;
+                minPath[0] = path;
+            }
+            if (p) Print.p("Path = [" + path + "] max=" + max + ", minMax=" + m[0][0] + ", count=" + ++count);
+            return;
+        }
+        if (x > 0 && path.indexOf(makePt(x - 1, y)) < 0) // prevents left after right because it returns to prev point
+        {
+            if (p) Print.p("calling U " + point);
+            findPaths(x - 1, y, path + ",", max, m, mat00, minPath);    // up
+            if (p) Print.p("returning U " + point);
+        }
+        if (x < m.length - 1 && path.indexOf(makePt(x + 1, y)) < 0) 
+        {
+            if (p) Print.p("calling D " + point);
+            findPaths(x + 1, y, path + ",", max, m, mat00, minPath);     // down
+            if (p) Print.p("returning D " + point);
+        }
+        if (y > 0 && path.indexOf(makePt(x, y - 1)) < 0)
+        {
+            if (p) Print.p("calling L " + point);
+            findPaths(x, y - 1, path + ",", max, m, mat00, minPath);    // left
+            if (p) Print.p("returning L " + point);
+
+        }
+        if (y < m.length - 1 && path.indexOf(makePt(x, y + 1)) < 0) 
+        {
+            if (p) Print.p("calling R " + point);
+            findPaths(x, y + 1, path + ",", max, m, mat00, minPath);     // right
+            if (p) Print.p("returning R " + point);
+        }
+    }
+    
+    /**
      * A method to find the first positive integer (>0) not included in the
      * array of unsorted integers (may have -ve numbers)
      * 
      * Example: the first number of the array {1,-3,6,2,0,15} is 3
      */
+    /**
+     * WAITING FOR AN ANSWER REGARDING SPACE COMPLEXITY WHEN HAS A TEMP VAR
+     * DEFINED IN THE RECURSIVE METHOD - DOES IT INCREASE IT FOR EACH CALL TO
+     * THE METHOD OR ADDS ONLY 1 TO IT
+     * answer: we do not count space complexity in recursion since the issue
+     * of the stack takes a lot of space and it is complex and it is beyond 
+     * the level of this course
+     */
+    private static int firstLoopRec(int[] arr, int len, int i, int step, int savLen, int sum)
+    {
+        //if (p) Print.p("i="+i+", len="+len+", step="+step+", savLen="+savLen+", ", arr);
+        switch(step){
+            case 1: // remove all -ve and 0 numbers and numbers larger than len
+                if (i == arr.length)
+                {
+                    step++;
+                    i = -1;
+                    savLen = len;
+                    break;
+                }
+                if (arr[i] <= 0 || arr[i] > len)
+                {
+                    while (len > 0 && (arr[len-1] <= 0 || arr[len-1] > len))
+                        len--;
+                    if (len == 0) return 1;   // none left
+                    if (i >= len)
+                        i = arr.length-1;
+                    else if (arr[len-1] > 0 && len > 1 && arr[len-1] <= len)
+                    {
+                        int temp = 0;
+                        swap(arr, i, len-1, temp);
+                        len--;
+                    }
+                }
+                break;
+            case 2: // check if there are duplicates so we need to ignore them
+                if (i == savLen)
+                {
+                    i = -1;
+                    if (len == savLen) step++;   // no duplicates so skip that step
+                    step++;
+                    break;
+                }
+                int index = Math.abs(arr[i]) - 1;
+                if (index < len && arr[index] > 0) // not a duplicate and not larger than len
+                    arr[index] = -arr[index];
+                else
+                {
+                    len--;
+                    arr[i] = savLen + 1;
+                }
+                break;
+            case 3:
+                if (i == savLen)
+                {
+                    i = -1;
+                    step++;
+                    break;
+                }
+                arr[i] = Math.abs(arr[i]);
+                if (arr[i] > len && arr[i] < savLen + 1)
+                    len--;
+                break;
+            case 4:
+                if (i == savLen)
+                {
+                    int sumOfSerie = (1 + len) * len / 2;
+                    if (sum == sumOfSerie)
+                        return len + 1;
+                    return sumOfSerie - sum;   // sum must be -ve becuase there are numbers larger than len
+                }
+                int temp;
+                temp = Math.abs(arr[i]);
+                if (temp <= len)
+                    sum += temp;
+        }
+        return firstLoopRec(arr, len, i+1, step, savLen, sum);
+    }
+    // helper method to swap 2 numbers in an array of integers
+    private static void swap(int[] arr, int i, int j, int temp)
+    {
+        temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp; 
+    }
     public static int firstLoop(int[] arr)
     {
         int len = arr.length;
-        Print.p(arr);
+        if (p) Print.p(arr);
+        int[] a = arr.clone();
+        if (false) return firstLoopRec(a, arr.length, 0, 1, arr.length, 0);
         p = false;
+        count = 0;
         for (int i=0; i<arr.length;i++) // remove all -ve and 0 numbers
         {
             if (arr[i] <= 0 || arr[i] > len)
             {
                 if (p) Print.p("i="+i+", len="+len+", ", arr);
                 while (len > 0 && (arr[len-1] <= 0 || arr[len-1] > len))
+                {
                     len--;
+                    count++;
+                    Print.p(count);
+                }
                 if (len == 0) return 1;   // no +ve numbers
-                if (p) Print.p(" len="+len+", ", arr);
+                if (p) Print.p("100 len="+len+", ", arr);
                 if (i >= len)
                     i = arr.length;
                 else if (arr[len-1] > 0 && len > 1 && arr[len-1] <= len)
@@ -37,8 +315,10 @@ public class Ex13Draft
                     MyLibrary.swap(arr, i, len-1);
                     len--;
                 }
-                if (p) Print.p(" len="+len+", ", arr);
+                if (p) Print.p("110 len="+len+", ", arr);
             }
+            else
+                count++;
             /*
             if (false && i < len && arr[i] > len)
             {
@@ -58,6 +338,8 @@ public class Ex13Draft
             }
             */
         }
+        if (p) Print.p(arr.length, count);
+        p = false;
         if (p) Print.p("1000, len="+len+", ", arr);
         int savLen = len;
         //p = true;
@@ -84,8 +366,8 @@ public class Ex13Draft
         */
         //p = true;
         if (p) Print.p("2000, len="+len+", ", arr);
-        p = false;
         /*
+        p = false;
         int sum = (1 + len) * len / 2;  // sum of arthimetic serie
         //p = true;
         if (p) Print.p("3000, sum="+sum+", ", arr);
@@ -103,7 +385,7 @@ public class Ex13Draft
         for (int i=0; i<savLen; i++)
         {
             index = Math.abs(arr[i]) - 1;
-            if (p) Print.p(""+i+", "+index+", "+len, arr);
+            if (p) Print.p(""+i+", "+index+", "+len+", ", arr);
             if (index < len && arr[index] > 0) // not a duplicate and not larger than len
             {
                 if (p) Print.p(i, index, arr[index], len);
@@ -116,6 +398,7 @@ public class Ex13Draft
             }
         }
         //p = true;
+        if (p) Print.p("3000, len="+len+", ", arr);
         if (p) Print.p(len, savLen);
         if (len < savLen)   // found duplicates or larger numbers
         {
@@ -157,6 +440,12 @@ public class Ex13Draft
         return nextNum + 1;
         */
     }
+    /*
+     * In the recursion method I sorted first which means time complexity
+     * of order O(n2) or O(nlogn) if we use quickSort() which requires writing
+     * here th emethod, and we did not learn it yet.
+     * That is why I used the firstLoop() method, which has O(n) time complexity
+     */
     private static final int INVALID_NUM = -1;
     private static int nextNum;
     public static int firstRec(int[] arr)
@@ -186,6 +475,7 @@ public class Ex13Draft
         }
         return firstNum(workArr, ++i);
     }
+    
     /**
      * A method - accepts an array of whole numbers and return it as a special array
      *
@@ -255,35 +545,68 @@ Print.p("array: ", arr);
             special(specialArr, i, medianIndex);
         }
     }
+    
     public static int longestNearlyPal(int[] arr)
     {
+        p = true;
         return isSemiPalindrome(arr, true, 0, 0);
     }
-    private static int isSemiPalindrome(int[] arr, boolean internal, int i, int k)
+    /**
+     * A helper method to create a sub-array, based on parameters i, k, and check if the 
+     * sub-array is semi-palindrom.
+     * 
+     * @param   int[] arr - the array to work on
+     * @param   boolean internal - tells whether the pair we are checking to see if they are
+     *                      equal, is internal to the array, or at the edge, because we are not
+     *                      allowed to drop a number at the edge of the sub-array to see
+     *                      if the reduced sub-array is a semi-palindrom
+     * @param   int numsToRemove - the number of numbers to drop from the array to create the sub-arrays
+     * @param   int index - the starting position within the array to create the sub-array
+     * 
+     * @return   
+     */
+    private static int isSemiPalindrome(int[] arr, boolean internal, int numsToRemove, int index)
     {
-        if (p) Print.p("in method 1, i=" + i + ", k=" + k, arr);
-        if (k == i + 1)
+        if (p) Print.p("in method 1, numsToRemove=" + numsToRemove + ", index=" + index, arr);
+        if (index == numsToRemove + 1) // finished to remove numsToRemove numbers
         {
-            i++;
-            k = 0;
+            numsToRemove++; // new length to remove
+            index = 0;      // start again from the left of the sub-array
         }
-        int len2 = arr.length - i;
-        if (len2 < 2)
+        int len2 = arr.length - numsToRemove; // the reduced length of the sub-array
+        if (len2 < 2)           // down to array of length 0 or 1 --> finished the process - not found
         {
-            k = i = arr.length;
+            index = numsToRemove = arr.length;
+            if (p) Print.p("end0 ", len2);
             return len2;
         }
         int[] arr2 = new int[len2];
-        System.arraycopy(arr, k, arr2, 0, len2);
+        if (p) Print.p("numsToRemove="+numsToRemove+", index="+index+", len2="+len2);
+        arrayCopy(arr, index, arr2, 0, len2);
         if (isSemiPalindrome(arr2, true, 0))
         {
-            k = i = arr.length;
+            index = numsToRemove = arr.length;  // found semi-palindrome
             if (p) Print.p("end ", arr2);
             return len2;
         }
-        return isSemiPalindrome(arr, true, i, ++k);
+        /**
+         * If we reached here then the array/sub-array we are checking, is not semi-palindrome.
+         * Therefore, reduce the array length by 1 and check if the two pssibleb sub-arrays
+         * with that length (initially, dropping the first digit, and if it is not the 
+         * semi-palindrome then dropping last digit).
+         * If still did not find a semi-palindrom, reduce the array length by 2 and check all
+         * sub-arrays of that length (drop 2 first numbers, then 1 from the begining and 1 from
+         * the end, then 2 from the end), and continue reducing the length of the array by 1,
+         * if still did not find a semi-palindrome, until left with sub-array of length 1, 
+         * which is by definition a palindrom, which means it is also a semi-palindrome.
+         * 
+         * @param    int[] arr - the array to work on
+         * @return   int - the longest semi-palindrom within the array
+         */
+        return isSemiPalindrome(arr, true, numsToRemove, index + 1);
     }
     // same as above but with extra debugging prints
+    /*
     private static int __isSemiPalindrome(int[] arr, boolean internal, int i, int k)
     {
         if (p) Print.p("in method 1, i=" + i + ", k=" + k, arr);
@@ -312,6 +635,7 @@ Print.p("array: ", arr);
         if (p) Print.p(false);
         return isSemiPalindrome(arr, true, i, ++k);
     }
+    */
     private static boolean isSemiPalindrome(int[] arr, boolean internal, int i)
     {
         if (p) Print.p("in method 3, i=" + i + " ", arr);
@@ -329,11 +653,11 @@ Print.p("array: ", arr);
                 if (len2 > 1)
                 {
                     int[] arr2 = new int[len2];
-                    System.arraycopy(arr, i + 1, arr2, 0, len2);
+                    arrayCopy(arr, i + 1, arr2, 0, len2);
                     boolean r = isSemiPalindrome(arr2, false, 0);
                     if (!r) // now drop the right digit of the pair and check again
                     {
-                        System.arraycopy(arr, i, arr2, 0, len2);
+                        arrayCopy(arr, i, arr2, 0, len2);
                         r = isSemiPalindrome(arr2, false, 0);
                     }
                     if (!r) return false;
@@ -344,49 +668,10 @@ Print.p("array: ", arr);
         }
         return isSemiPalindrome(arr, internal, ++i);
     }
-    private static int minMax = Integer.MAX_VALUE;
-    public static int extreme(int[][] mat)
+    private static void arrayCopy(int[] source, int sourceIndex, int[] target, int targetIndex, int numItemsTocopy)
     {
-        findPaths(mat.length - 1, mat.length - 1, "", -1, mat);
-        return minMax;
-    }
-    private static void findPaths(int x, int y, String path, int max, int[][] m)
-    {
-        String point = makePt(x, y);
-        path += point;
-        if (p) Print.p(path + ",max=" + max + ",value=" + m[x][y]);
-        if (max < m[x][y]) max = m[x][y];
-        if (x == 0 && y == 0)
-        {
-            if (minMax > max) minMax = max;
-            if (p) Print.p("Path = [" + path + "] max=" + max + ", minMax=" + minMax + ", count=" + ++count);
-            return;
-        }
-        if (x > 0 && path.indexOf(makePt(x - 1, y)) < 0) // prevents left after right because it returns to prev point
-        {
-            if (p) Print.p("calling L " + point);
-            findPaths(x - 1, y, path + ",", max, m);    // left
-            if (p) Print.p("returning L " + point);
-        }
-        if (x < m.length - 1 && path.indexOf(makePt(x + 1, y)) < 0) 
-        {
-            if (p) Print.p("calling R " + point);
-            findPaths(x + 1, y, path + ",", max, m);     // right
-            if (p) Print.p("returning R " + point);
-        }
-        if (y > 0 && path.indexOf(makePt(x, y - 1)) < 0)
-        {
-            if (p) Print.p("calling D " + point);
-            findPaths(x, y - 1, path + ",", max, m);    // down
-            if (p) Print.p("returning D " + point);
-
-        }
-        if (false && y < m.length - 1 && path.indexOf(makePt(x, y + 1)) < 0) 
-        {
-            if (p) Print.p("calling U " + point);
-            findPaths(x, y + 1, path + ",", max, m);     // right
-            if (p) Print.p("returning U " + point);
-        }
+       for (int i=sourceIndex; i<numItemsTocopy+sourceIndex ; i++)
+           target[targetIndex++] = source[i];
     }
     private static String makePt(int x, int y)
     {
