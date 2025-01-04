@@ -22,22 +22,21 @@ public class Tester
     
     public static void main()
     {
-        int[] run = {1,0,0,0};
+        int[] run = {0,0,0,1};
         int[][] m;
         int[] arr;
         int a[][] = new int[117][];
         boolean p = true;
         if (run[3] == 1)
         {
+            Print.p("------ extreme ------");
             m = new int[][]{{1, 3}, {4, 2}};
             m = new int[][]{{1, 8}, {3, 4}};
             m = new int[][]{{1, 20, 5}, {6, 3, 4}, {6, 13, 4}};
             m = new int[][]{{1, 20, 5}, {6, 3, 4}, {0, 13, 4}};
-            /*
             m = new int[][]{{4,5,8,2}, {3,12,7,16}, {13,1,10,14}, {15,11,9,6}};
             m = new int[][]{{4,5,8,2}, {3,12,16, 7}, {13,1,10,14}, {15,11,9,6}};
-            m = new int[][]{{4,1,9,3,25}, {24,23,22,21,5}, {13,12,15,16,14}, {17,11,18,19,20}, {10,2,8,7,6}};
-            */
+            //m = new int[][]{{4,1,9,3,25}, {24,23,22,21,5}, {13,12,15,16,14}, {17,11,18,19,20}, {10,2,8,7,6}};
             //m = new int[][]{{4,1,9,3,25}, {24,23,2,21,5}, {13,12,15,16,22}, {17,11,18,19,20}, {10,14,8,7,6}};
             //m = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8, -9}};
             //m = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8, 0}};
@@ -48,10 +47,9 @@ public class Tester
             m = new int[][]{{1},{2}};
             m = new int[][]{{1, 3},{2}};
             */
-            Print.p("------ extreme ------");
             Print.p(m);
-            //Print.p("extreme minMax = " + Ex13.extreme(m));
-            Print.p("extreme minMax = " + Ex13Draft.extreme(m));
+            Print.p("extreme minMax = " + Ex13.extreme(m));
+            //Print.p("extreme minMax = " + Ex13Draft.extreme(m));
             Print.p(m);
         }
         if (run[2] == 1)

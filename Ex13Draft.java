@@ -443,7 +443,7 @@ public class Ex13Draft
     /*
      * In the recursion method I sorted first which means time complexity
      * of order O(n2) or O(nlogn) if we use quickSort() which requires writing
-     * here th emethod, and we did not learn it yet.
+     * here the method, and we did not learn it yet.
      * That is why I used the firstLoop() method, which has O(n) time complexity
      */
     private static final int INVALID_NUM = -1;
