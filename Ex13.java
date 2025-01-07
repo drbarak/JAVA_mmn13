@@ -29,22 +29,18 @@ public class Ex13
         // it, so in the method it is assumed the value is correct.
         int calcMed = med;  // not really needed but it is here just to show that the median was checked
         int[] a = new int[arr.length];
-        int index=0;
+        int indexMore=0, indexLess=1;
         for (int i=0; i<arr.length;i++) // set larger numbers at even positions
         {
             if (arr[i] >= calcMed)
             {
-                a[index] = arr[i];
-                index+=2;
+                a[indexMore] = arr[i];
+                indexMore+=2;
             }
-        }
-        index=1;
-        for (int i=0; i<arr.length;i++) // set smaller numbers at odd positions
-        {
-            if (arr[i] < calcMed)
+            else if (arr[i] < calcMed)
             {
-                a[index] = arr[i];
-                index+=2;
+                a[indexLess] = arr[i];
+                indexLess+=2;
             }
         }
         return a;
@@ -192,9 +188,7 @@ public class Ex13
             index = numsToRemove = arr.length;
             return len2;
         }
-        int[] arr2 = new int[len2];
-        arrayCopy(arr, index, arr2, 0, len2);
-        if (isSemiPalindrome(arr2, true, 0))
+        if (isSemiPalindrome(arr, true, 0, index, index + len2))
         {
             index = numsToRemove = arr.length;  // found semi-palindrome
             return len2;
@@ -230,12 +224,13 @@ public class Ex13
      * 
      * @return  true if it is semi-palindrom, else it returns false
      */
-    private static boolean isSemiPalindrome(int[] arr, boolean internal, int index)
+    private static boolean isSemiPalindrome(int[] arr, boolean internal, int index, int start, int end)
     {
-        if (index == arr.length / 2) return true;   // finished checking all the pairs of this array
+        int n = end - start;
+        if (index == n / 2) return true;   // finished checking all the pairs of this array
         // compare 2 digits - one from the left and the other from the right of the array,
         // the position of the digits is shifted by the index i
-        if (arr[index] != arr[arr.length - 1 - index])
+        if (arr[index + start] != arr[n - 1 - index + start])
         {
             // remove one number, if the array is internal to the original and check again
             if (index > 0 && internal)
@@ -244,16 +239,13 @@ public class Ex13
                 // Palindrome are looked for.
                 // It drops the left number of the pair of numbers that are not equal and
                 // checks again, then the right number of the pair and checks again
-                int len2 = arr.length-2*index-1;
+                int len2 = n - 2*index - 1;
                 if (len2 > 1)
                 {
-                    int[] arr2 = new int[len2];
-                    arrayCopy(arr, index + 1, arr2, 0, len2);
-                    boolean r = isSemiPalindrome(arr2, false, 0);
+                    boolean r = isSemiPalindrome(arr, false, 0, index + 1 + start, len2 + start+index+1);
                     if (!r) // now drop the right digit of the pair and check again
                     {
-                        arrayCopy(arr, index, arr2, 0, len2);
-                        r = isSemiPalindrome(arr2, false, 0);
+                        r = isSemiPalindrome(arr, false, 0, index + start, len2 + index + start);
                     }
                     if (!r) return false;
                 }
@@ -261,25 +253,9 @@ public class Ex13
             else
                 return false;
         }
-        return isSemiPalindrome(arr, internal, index+1); // this sub-array is not semi-palindrom
-                                    // so go back and check more internal pair of digits
+        return isSemiPalindrome(arr, internal, index+1, start, end); // this sub-array is not semi-palindrom
     }
-    /**
-     * A helper method to copy source array to a target array from position sourceIndex in the
-     * source array to position targetIndex of the target array, for length of
-     * numItemsTocopy items
-     * 
-     * @param    int[] source - the source array to copy from
-     * @param    int sourceIndex - the starting position in the source array
-     * @return   int[] target - the target array to copy to
-     * @param    int targetIndex - the starting position in the target array
-     * @param    int numItemsTocopy - number of items to copy
-     */
-    private static void arrayCopy(int[] source, int sourceIndex, int[] target, int targetIndex, int numItemsTocopy)
-    {
-       for (int i=sourceIndex; i<numItemsTocopy+sourceIndex ; i++)
-           target[targetIndex++] = source[i];
-    }
+    
     /**
      * A method that accepts a 2-dimensional array (named mat[][]) of whole
      * +ve numbers and goes over all possible paths in this array, starting
@@ -295,7 +271,7 @@ public class Ex13
      */
     public static int extreme(int[][] mat)
     {
-        return findPaths(mat.length-1, mat.length-1, -1, Integer.MAX_VALUE, mat);
+        return findPaths(0, 0, -1, Integer.MAX_VALUE, mat);
     }
     /**
      * The recursive method that goes over all possible paths in the 
@@ -312,39 +288,25 @@ public class Ex13
      */
     private static int findPaths(int x, int y, int max, int min, int[][] m)
     {
+            // check within boundries
+        int n = m.length;
+        if (x < 0 || x >= n || y < 0 || y >= n) return min;
         int mxy = m[x][y];
         if (min < mxy) return min; // no use to check this path because this 
                     // number is greater than the min that was already found
         if (mxy < 0) return min; // check if we visited this point already
         if (max < mxy) max = mxy;
-        if (x == 0 && y == 0)
+        if (x == n-1 && y == n-1)
         { // update if less since we look for minimum between all the max(es)
             if (min > max) min = max;
             return min;
         }
         m[x][y] = -mxy; // marked as visited already
-        int num;
-        if (x > 0 && m[x-1][y]>0) // prevents left after right because it returns to prev point
-        {
-            num = findPaths(x - 1, y, max, min, m);    // up
-            if (min > num) min = num;
-        }
-        if (x < m.length-1 && m[x+1][y]>0)
-        {
-            num = findPaths(x + 1, y, max, min, m);     // down
-            if (min > num) min = num;
-        }
-        if (y > 0 && m[x][y-1]>0)
-        {
-            num = findPaths(x, y-1, max, min, m);    // left
-            if (min > num) min = num;
-        }
-        if (y < m.length-1 && m[x][y+1]>0) 
-        {
-            num = findPaths(x, y+1, max, min, m);     // right
-            if (min > num) min = num;
-        }
-        if (m[x][y] < 0) m[x][y] = -m[x][y]; // restore value
-        return min;
+        int num1 = findPaths(x-1, y, max, min, m);    // up
+        int num2 = findPaths(x+1, y, max, min, m);    // down
+        int num3 = findPaths(x, y-1, max, min, m);    // left
+        int num4 = findPaths(x, y+1, max, min, m);    // right
+        m[x][y] = -m[x][y]; // restore value
+        return Math.min(Math.min(num1, num2), Math.min(num3, num4));
     }
 }

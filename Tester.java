@@ -22,37 +22,65 @@ public class Tester
     
     public static void main()
     {
-        int[] run = {0,0,0,1};
+        boolean extreme=true, specialArr=false, isSemiPalindrome=false, first=false;
+        //int[] run = {1,0,0,0};
         int[][] m;
         int[] arr;
         int a[][] = new int[117][];
         boolean p = true;
-        if (run[3] == 1)
+        if (extreme)//run[3] == 1)
         {
             Print.p("------ extreme ------");
-            m = new int[][]{{1, 3}, {4, 2}};
-            m = new int[][]{{1, 8}, {3, 4}};
-            m = new int[][]{{1, 20, 5}, {6, 3, 4}, {6, 13, 4}};
-            m = new int[][]{{1, 20, 5}, {6, 3, 4}, {0, 13, 4}};
-            m = new int[][]{{4,5,8,2}, {3,12,7,16}, {13,1,10,14}, {15,11,9,6}};
-            m = new int[][]{{4,5,8,2}, {3,12,16, 7}, {13,1,10,14}, {15,11,9,6}};
-            //m = new int[][]{{4,1,9,3,25}, {24,23,22,21,5}, {13,12,15,16,14}, {17,11,18,19,20}, {10,2,8,7,6}};
-            //m = new int[][]{{4,1,9,3,25}, {24,23,2,21,5}, {13,12,15,16,22}, {17,11,18,19,20}, {10,14,8,7,6}};
-            //m = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8, -9}};
-            //m = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8, 0}};
-            //m = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8}};
-            //m = new int[][]{{1, 20, 5}, {6, 3, 4}, {-6, 13, 4}};
-            /*
-            m = new int[][]{};
-            m = new int[][]{{1},{2}};
-            m = new int[][]{{1, 3},{2}};
+            int[] test = new int[20];
+            int[][][] mat = new int[20][][];
+            int i = 0;
+            mat[i] = new int[][]{{1, 3}, {4, 2}};
+            test[i++] = 3;
+            mat[i] = new int[][]{{1, 8}, {3, 4}};
+            test[i++] = 4;
+            mat[i] = new int[][]{{1, 20, 5}, {6, 3, 4}, {6, 13, 4}};
+            test[i++] = 6;
+            mat[i] = new int[][]{{1, 20, 5}, {6, 3, 4}, {0, 13, 4}};
+            test[i++] = 6;
+            mat[i] = new int[][]{{4,5,8,2}, {3,12,7,16}, {13,1,10,14}, {15,11,9,6}};
+            test[i++] = 10;
+            mat[i] = new int[][]{{4,5,8,2}, {3,12,16, 7}, {13,1,10,14}, {15,11,9,6}};
+            test[i++] = 12;
+            mat[i] = new int[][]{{4,1,9,3,25}, {24,23,22,21,5}, {13,12,15,16,14}, {17,11,18,19,20}, {10,2,8,7,6}};
+            test[i++] = 21;
+            mat[i] = new int[][]{{4,1,9,3,25}, {24,23,2,21,5}, {13,12,15,16,22}, {17,11,18,19,20}, {10,14,8,7,6}};
+            test[i++] = 15;
+            /* will not work in Ex13 because assumes rectangular matrix and not empty and only +ve numbers
+            mat[i] = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8, -9}};
+            test[i++] = -9;
+            mat[i] = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8, 0}};
+            test[i++] = 0;
+            mat[i] = new int[][]{{1, 20, 5}, {6, 3, 4}, {-6, 13, 4}};
+            test[i++] = 6;
+            mat[i] = new int[][]{{1, 20, 5}, {-6, 3, 4}, {6, 13, 4}};
+            test[i++] = 4;
+            mat[i] = new int[][]{};
+            test[i++] = 0;
+            mat[i] = new int[][]{{-1, -2, -3}, {-4, -5, -6}, {-7, -8}};
+            test[i++] = 12;
+            mat[i] = new int[][]{{1},{2}};
+            test[i++] = 0;
+            mat[i] = new int[][]{{1, 3},{2}};
+            test[i++] = 0;
             */
-            Print.p(m);
-            Print.p("extreme minMax = " + Ex13.extreme(m));
-            //Print.p("extreme minMax = " + Ex13Draft.extreme(m));
-            Print.p(m);
+            int min;
+            for (int j=0; j<i; j++)
+            {
+                Print.p(mat[j]);
+                min = Ex13.extreme(mat[j]);
+                Print.p("Ex13.extreme minMax = " + min + ", " + test[j]);
+                min = Ex13Draft.extreme(mat[j]);
+                Print.p("Ex13Draft.extreme minMax = " + min + ", " + test[j]);
+                Print.p(mat[j]);    // verify matrix is unchanged
+                Print.p("--------------------------------");
+            }
         }
-        if (run[2] == 1)
+        if (specialArr)//run[2] == 1)
         {
             Print.p("\n------ specialArr ------");
             a[0] = new int[]{2, -5, -3, 0, 1, 4, 7};
@@ -97,7 +125,7 @@ public class Tester
                 }
             }
         }
-        if (run[1] == 1)
+        if (first)//run[1] == 1)
         {
             Print.p("\n------ first ------");
             int[] test = new int[20];
@@ -134,37 +162,57 @@ public class Tester
                 Print.p("first +ve=" + result + ", test="+ (result == test[i])+", ", savA);
             }
         }
-        if (run[0] == 1)
+        if (isSemiPalindrome)//run[0] == 1)
         {
             Print.p("\n------ isSemiPalindrome ------");
-            arr = new int[] {1, 2, 3, 4, 5};
-            //arr = new int[] {1, 2, 3, 4, 5, 6};
-            //arr = new int[] {1, 2, 3, 5, 5};
-            arr = new int[] {1, 2, 3, 4, 4};
-            /*
-            arr = new int[] {1, 2, 3, 3, 5};
-            arr = new int[] {1, 3, 2, 3, 5};
-            arr = new int[] {4, 10, 10, 3, 4};
-            */
-            //arr = new int[] {4, 10, 10, 3, 10, 4};
-            /*
-            arr = new int[] {4, 10, 10, 10, 3, 4};
-            arr = new int[] {4, 10, 10, 10, 10, 3, 10, 4};
-            arr = new int[] {10, 10, 4, 3, 10};
-            arr = new int[] {1, 1, 4, 10, 10, 4, 3, 10, 10};
-            */
-            arr = new int[] {1, 1, 4};
-            /*
-            arr = new int[] {4, 2, 2};
-            arr = new int[] {2, 4, 2};
-            arr = new int[] {-1, -1};
-            arr = new int[] {-1};
-            arr = new int[] {};
-            */
-            arr = new int[] {1,3,2,5,2,1};
-            arr = new int[] {1,2,5,2,3,1};
-            //Print.p("isSemiPalindrome " + Ex13Draft.longestNearlyPal(arr) + ", array=", arr);
-            Print.p("isSemiPalindrome " + Ex13.longestNearlyPal(arr) + ", array=", arr);
+            int i = 0;
+            int[] test = new int[50];
+            test[i] = 1;
+            a[i++] = new int[] {1, 2, 3, 4, 5};
+            test[i] = 1;
+            a[i++] = new int[] {1, 2, 3, 4, 5, 6};
+            test[i] = 2;
+            a[i++] = new int[] {1, 2, 3, 5, 5};
+            test[i] = 2;
+            a[i++] = new int[] {1, 2, 3, 4, 4};
+            test[i] = 2;
+            a[i++] = new int[] {1, 2, 3, 3, 5};
+            test[i] = 3;
+            a[i++] = new int[] {1, 3, 2, 3, 5};
+            test[i] = 5;
+            a[i++] = new int[] {4, 10, 10, 3, 4};
+            test[i] = 6;
+            a[i++] = new int[] {4, 10, 10, 3, 10, 4};
+            test[i] = 6;
+            a[i++] = new int[] {4, 10, 10, 10, 3, 4};
+            test[i] = 8;
+            a[i++] = new int[] {4, 10, 10, 10, 10, 3, 10, 4};
+            test[i] = 4;
+            a[i++] = new int[] {10, 10, 4, 3, 10};
+            test[i] = 6;
+            a[i++] = new int[] {1, 1, 4, 10, 10, 4, 3, 10, 10};
+            test[i] = 2;
+            a[i++] = new int[] {1, 1, 4};
+            test[i] = 2;
+            a[i++] = new int[] {4, 2, 2};
+            test[i] = 3;
+            a[i++] = new int[] {2, 4, 2};
+            test[i] = 2;
+            a[i++] = new int[] {-1, -1};
+            test[i] = 1;
+            a[i++] = new int[] {-1};
+            test[i] = 0;
+            a[i++] = new int[] {};
+            test[i] = 6;
+            a[i++] = new int[] {1,3,2,5,2,1};
+            test[i] = 6;
+            a[i++] = new int[] {1,2,5,2,3,1};
+            for (int j=0; j<20; j++)
+            {
+                int len = Ex13Draft.longestNearlyPal(a[j]);
+                //int len = Ex13.longestNearlyPal(a[j]);
+                Print.p("isSemiPalindrome "+len+", "+(test[j]==len)+", array=", a[j]);
+            }
         }
     }
 }

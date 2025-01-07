@@ -22,13 +22,13 @@ public class Ex13Draft
     {
         //int[] minMax = new int []{Integer.MAX_VALUE};  // to store the min sim 
         if (mat.length < 2) return Integer.MIN_VALUE; // must be at least size 2x2
-        for (int i=0; i<mat.length;i++)
+        for (int i=0; i<mat.length;i++) // check matrix is square
             if (mat[i].length != mat.length) 
-                return Integer.MIN_VALUE;   // invalid: return min to know ehat the problem
+                return Integer.MIN_VALUE;   // invalid: return min to know what is the problem
         boolean neg = false;
         int max = Integer.MIN_VALUE;
         int min = Integer.MAX_VALUE;
-        for (int i=0; i<mat.length;i++)
+        for (int i=0; i<mat.length;i++) // find min, max and if there -ve numbers
         {
             for (int j=0; j<mat.length;j++)
             {
@@ -43,16 +43,16 @@ public class Ex13Draft
         {
             if (max - min < Integer.MAX_VALUE)
             {
-                shift = 1 - min;    // shift mAT so all +ve
+                shift = 1 - min;    // shift mat so all +ve
                 for (int i=0; i<mat.length;i++)
                     for (int j=0; j<mat.length;j++)
                         mat[i][j] += shift;
             }
             else
-                return Integer.MAX_VALUE;   // invalid: return max to know ehat the problem
+                return Integer.MAX_VALUE;   // invalid: return max to know what the problem
         }
         /*
-        int mat00 = mat[0][0];  // we are not allowe to create an extra array or global variable
+        int mat00 = mat[0][0];  // we are not allowed to create an extra array or global variable
         //mat[0][0] = Integer.MAX_VALUE;
         String[] minPath = new String[]{""};
         findPaths(0, 0, "", -1, mat, mat00, minPath);
@@ -94,15 +94,15 @@ public class Ex13Draft
         String point = makePt(x, y);
         if (p) Print.p(point, count);
         //restore the boundries check before calling the method to prevent 
-        //  unneeded calls to the method
-        //if (x < 0 || x >= m.length || y < 0 || y >= m.length) return;
+        //  unneeded calls to the method - NO: it makes the code more combersome
+        if (x < 0 || x >= m.length || y < 0 || y >= m.length) return min;
         //int mxy = (x == 0 && y == 0 ? mat00 : m[x][y]);
         int mxy = m[x][y];
         if (min < mxy) return min; // no use to check this path because a number greater than the min was already found
         //if (p) Print.p("max=" + max + ",value=" + mxy);
         if (p) Print.p(m);
         if (p) Print.p(",value=" + mxy);
-        if (mxy < 0) return min; // check if we visited this point already
+        if (mxy < 0) return min; // checks if we visited this point already
         if (max < mxy) max = mxy;
         if (x == m.length-1 && y == m.length-1)
         {
@@ -118,38 +118,39 @@ public class Ex13Draft
         //else
         m[x][y] = -mxy; // marked as visited already
         //int max = mxy;
-        int num;
-        if (x > 0 && m[x-1][y]>0)// && path.indexOf(makePt(x - 1, y)) < 0) // prevents left after right because it returns to prev point
-        {
+        int num1;
+        //if (x > 0 && m[x-1][y]>0)// && path.indexOf(makePt(x - 1, y)) < 0) // prevents left after right because it returns to prev point
+        //{
             if (p) Print.p("calling U " + point);
-            num = findPaths(x-1, y, max, min, m);    // up
-            if (min > num) min = num;
+            num1 = findPaths(x-1, y, max, min, m);    // up
+            //if (min > num) min = num;
             if (p) Print.p("returning U " + point);
-        }
-        if (x < m.length-1 && m[x+1][y]>0)// && path.indexOf(makePt(x + 1, y)) < 0) 
-        {
+        //}
+        //if (x < m.length-1 && m[x+1][y]>0)// && path.indexOf(makePt(x + 1, y)) < 0) 
+        //{
             if (p) Print.p("calling D " + point);
-            num = findPaths(x+1, y, max, min, m);     // down
-            if (min > num) min = num;
+            int num2 = findPaths(x+1, y, max, min, m);     // down
+            //if (min > num) min = num;
             if (p) Print.p("returning D " + point);
-        }
-        if (y > 0 && m[x][y-1]>0)// && path.indexOf(makePt(x, y - 1)) < 0)
-        {
+        //}
+        //if (y > 0 && m[x][y-1]>0)// && path.indexOf(makePt(x, y - 1)) < 0)
+        //{
             if (p) Print.p("calling L " + point);
-            num = findPaths(x, y-1, max, min, m);    // left
-            if (min > num) min = num;
+            int num3 = findPaths(x, y-1, max, min, m);    // left
+            //if (min > num) min = num;
             if (p) Print.p("returning L " + point);
-        }
-        if (y < m.length-1 && m[x][y+1]>0)// && path.indexOf(makePt(x, y + 1)) < 0) 
-        {
+        //}
+        //if (y < m.length-1 && m[x][y+1]>0)// && path.indexOf(makePt(x, y + 1)) < 0) 
+        //{
             if (p) Print.p("calling R " + point);
-            num = findPaths(x, y+1, max, min, m);     // right
-            if (min > num) min = num;
+            int num4 = findPaths(x, y+1, max, min, m);     // right
+            //if (min > num) min = num;
             if (p) Print.p("returning R " + point);
-        }
+        //}
         if (m[x][y] < 0) m[x][y] = -m[x][y]; // restore value
         if (p) Print.p(1000, max, mxy, m[x][y]);
-        return min;
+        return Math.min(Math.min(num1, num2), Math.min(num3, num4));
+        //return min;
     }
     private static void findPaths(int x, int y, String path, int max, 
                         int[][] m, int mat00, String[] minPath)
@@ -490,8 +491,8 @@ public class Ex13Draft
         //if (true) return specialArrNoSort(arr, med);
         /*
         specialArrNoSort(arr, med);
-        */
         count = 0;
+        */
         int[] specialArr = sortArr(arr);  // copy and sort the original array so not to change it
         Print.p("Selection sort count=" + count);
         // find the median and compare to input parameters
@@ -506,6 +507,24 @@ public class Ex13Draft
 Print.p("array: ", arr);
         p = false;
         int[] a = new int[arr.length];
+        count = 0;
+        int indexMore=0, indexLess=1;
+        for (int i=0; i<arr.length;i++) // set larger numbers at even positions
+        {
+            count++;
+            if (arr[i] >= calcMed)
+            {
+                a[indexMore] = arr[i];
+                indexMore+=2;
+            }
+            else if (arr[i] < calcMed)
+            {
+                a[indexLess] = arr[i];
+                indexLess+=2;
+            }
+        }
+        Print.p("O(n) count=" + count);
+        /*
         int index=0;
         count = 0;
         for (int i=0; i<arr.length;i++) // set larger numbers
@@ -532,6 +551,7 @@ Print.p("array: ", arr);
             if (p) Print.p("i="+i+",array2: ", a);
         }
         Print.p("O(2n) count=" + count);
+        */
         if (true) return a;
         return specialArr;
     }
@@ -548,7 +568,7 @@ Print.p("array: ", arr);
     
     public static int longestNearlyPal(int[] arr)
     {
-        p = true;
+        p = false;
         return isSemiPalindrome(arr, true, 0, 0);
     }
     /**
@@ -580,13 +600,20 @@ Print.p("array: ", arr);
             if (p) Print.p("end0 ", len2);
             return len2;
         }
-        int[] arr2 = new int[len2];
         if (p) Print.p("numsToRemove="+numsToRemove+", index="+index+", len2="+len2);
+        int[] arr2 = new int[len2];
         arrayCopy(arr, index, arr2, 0, len2);
-        if (isSemiPalindrome(arr2, true, 0))
+        if (p) Print.p("1. To check for duplicate calls ", arr2);
+        /*
+         * comment the next line not to use arrayCopy() and uncomment the line after
+         */
+        //if (isSemiPalindrome(arr2, true, 0))
+        if (_isSemiPalindrome(arr, true, 0, index, index + len2))
         {
+        arr2 = new int[len2]; // just for the printing here
+        arrayCopy(arr, index, arr2, 0, len2);
+        if (p) Print.p("end ", arr2);
             index = numsToRemove = arr.length;  // found semi-palindrome
-            if (p) Print.p("end ", arr2);
             return len2;
         }
         /**
@@ -636,12 +663,61 @@ Print.p("array: ", arr);
         return isSemiPalindrome(arr, true, i, ++k);
     }
     */
+    /* same as next method but without copying to an extra array - just use start/end indices*/
+    private static boolean _isSemiPalindrome(int[] arr, boolean internal, int index, int start, int end)
+    {
+        int n = end - start;
+        int[] arr2 = new int[n-index]; // just for the printing here
+        arrayCopy(arr, index+start, arr2, 0, arr2.length);
+        if (p) Print.p("in method 4, i=" + index + " ", arr2);
+        if (p) Print.p(index, start, n, end);
+        if (index == n / 2) return true;   // finished checking all the pairs of this array
+        // compare 2 digits - one from the left and the other from the right of the array,
+        // the position of the digits is shifted by the index i
+        if (p) Print.p(index, start, arr[index + start], arr[n - 1 - index + start]);  
+        if (arr[index + start] != arr[n - 1 - index + start])
+        {
+            // remove one number, if the array is internal to the original and check again
+            if (index > 0 && internal)
+            {
+                // This code checks for SemiPalindrome - if it is removed then only true 
+                // Palindrome are looked for.
+                // It drops the left number of the pair of numbers that are not equal and
+                // checks again, then the right number of the pair and checks again
+                int len2 = n - 2*index - 1;
+                if (len2 > 1)
+                {
+                    arr2 = new int[len2];
+                    arrayCopy(arr, index + 1, arr2, 0, len2);
+                    if (p) Print.p("in method 4A, i=" + index + " ", arr2);
+                    if (p) Print.p(start, arr[index + 1 + start], arr[len2 + index+1 + start-1]);
+                    if (p) Print.p(len2, arr2[0], arr2[len2-1]);
+                    boolean r = _isSemiPalindrome(arr, false, 0, index + 1 + start, len2 + start+index+1);
+                    if (!r) // now drop the right digit of the pair and check again
+                    {
+                        arrayCopy(arr, index, arr2, 0, len2);
+                        if (p) Print.p("in method 4B, i=" + index + " ", arr2);
+                    if (p) Print.p(start, arr[index + start], arr[len2 + index+start-1]);
+                        r = _isSemiPalindrome(arr, false, 0, index + start, len2 + index+start);
+                    }
+                    if (!r) return false;
+                }
+            }
+            else
+                return false;
+        }
+        if (p) Print.p("calling again "+(index+1)+","+start+","+end);
+        return _isSemiPalindrome(arr, internal, index+1, start, end); // this sub-array is not semi-palindrom
+    }
+    // this method uses arraycopy()
     private static boolean isSemiPalindrome(int[] arr, boolean internal, int i)
     {
         if (p) Print.p("in method 3, i=" + i + " ", arr);
+        if (p) Print.p(-10, i, arr.length);
         if (i == arr.length / 2) return true;
         // compare 2 digits - one from the left and the other from the right of the array
         // the position of the digits is shifted by the index i
+        if (p) Print.p(-20,arr[i], arr[arr.length - 1 - i]);
         if (arr[i] != arr[arr.length - 1 - i])
         {
             // remove one number, if the array is internal to the original and check again
@@ -655,6 +731,7 @@ Print.p("array: ", arr);
                     int[] arr2 = new int[len2];
                     arrayCopy(arr, i + 1, arr2, 0, len2);
                     if (p) Print.p("in method 3A, i=" + i + " ", arr2);
+                    if (p) Print.p(-30, arr2[0], arr2[len2-1]);
                     boolean r = isSemiPalindrome(arr2, false, 0);
                     if (!r) // now drop the right digit of the pair and check again
                     {
@@ -668,8 +745,20 @@ Print.p("array: ", arr);
             else
                 return false;
         }
-        return isSemiPalindrome(arr, internal, ++i);
+        if (p) Print.p("calling again "+(i+1));
+        return isSemiPalindrome(arr, internal, i+1);
     }
+    /**
+     * A helper method to copy source array to a target array from position sourceIndex in the
+     * source array to position targetIndex of the target array, for length of
+     * numItemsTocopy items
+     * 
+     * @param    int[] source - the source array to copy from
+     * @param    int sourceIndex - the starting position in the source array
+     * @return   int[] target - the target array to copy to
+     * @param    int targetIndex - the starting position in the target array
+     * @param    int numItemsTocopy - number of items to copy
+     */
     private static void arrayCopy(int[] source, int sourceIndex, int[] target, int targetIndex, int numItemsTocopy)
     {
        for (int i=sourceIndex; i<numItemsTocopy+sourceIndex ; i++)
